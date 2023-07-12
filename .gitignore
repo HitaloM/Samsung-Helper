@@ -1,0 +1,21 @@
+# cache
+__pycache__
+.ruff_cache/
+.mypy_cache/
+
+# ide
+.vscode
+
+# venv
+.venv/
+venv/
+
+# sambot
+data/config.env
+sambot/database/db.sqlite3*
+locales/*/*/*.mo
+
+# rye
+requirements.lock
+requirements-dev.lock
+.python-version
