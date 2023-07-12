@@ -6,3 +6,8 @@ from .chats import Chats
 from .users import Users
 
 __all__ = ("DB_PATH", "SqliteConnection", "SqliteDBConn", "Chats", "Users")
+
+
+async def create_tables() -> None:
+    await Chats.create_tables()
+    await Users.create_tables()

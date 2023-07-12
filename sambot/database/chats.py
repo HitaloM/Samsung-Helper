@@ -10,6 +10,16 @@ from .base import SqliteConnection
 
 class Chats(SqliteConnection):
     @staticmethod
+    async def create_tables() -> None:
+        sql = """
+        CREATE TABLE IF NOT EXISTS chats (
+            id INTEGER PRIMARY KEY,
+            language_code TEXT
+        )
+        """
+        await Chats._make_request(sql)
+
+    @staticmethod
     async def get_chat(chat: Chat) -> list | str | None:
         sql = "SELECT * FROM chats WHERE id = ?"
         params = (chat.id,)

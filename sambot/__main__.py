@@ -13,6 +13,7 @@ from cashews.exceptions import CacheBackendInteractionError
 
 from sambot import __version__ as sambot_version
 from sambot import bot, cache, config, dp, i18n
+from sambot.database import create_tables
 from sambot.handlers import pm_menu
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
@@ -32,6 +33,8 @@ async def main():
             str(config.sentry_url),
             traces_sample_rate=1.0,
         )
+
+    await create_tables()
 
     dp.message.middleware(ACLMiddleware())
     dp.message.middleware(MyI18nMiddleware(i18n=i18n))

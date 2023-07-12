@@ -23,17 +23,9 @@ class SqliteDBConn:
         self.conn.row_factory = aiosqlite.Row
         await self.conn.executescript(
             """
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
-                language_code TEXT
-            );
-            CREATE TABLE IF NOT EXISTS chats (
-                id INTEGER PRIMARY KEY,
-                language_code TEXT
-            );
             VACUUM;
             PRAGMA journal_mode=WAL;
-        """
+            """
         )
         return self.conn
 

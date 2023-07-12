@@ -10,6 +10,16 @@ from .base import SqliteConnection
 
 class Users(SqliteConnection):
     @staticmethod
+    async def create_tables() -> None:
+        sql = """
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            language_code TEXT
+        )
+        """
+        await Users._make_request(sql)
+
+    @staticmethod
     async def get_user(user: User) -> list | str | None:
         sql = "SELECT * FROM users WHERE id = ?"
         params = (user.id,)
