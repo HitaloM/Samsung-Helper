@@ -10,7 +10,7 @@ from aiogram.types import Chat, TelegramObject, User
 from babel import Locale, UnknownLocaleError
 
 from sambot import i18n
-from sambot.database import Chats, Users
+from sambot.database import chats, users
 
 
 class ACLMiddleware(BaseMiddleware):
@@ -24,7 +24,7 @@ class ACLMiddleware(BaseMiddleware):
         chat: Chat | None = data.get("event_chat", None)
 
         if user and not user.is_bot:
-            userdb = await Users.get_user(user=user)
+            userdb = await users.get_user(user=user)
             if not userdb:
                 if user.language_code:
                     try:
@@ -37,17 +37,17 @@ class ACLMiddleware(BaseMiddleware):
                     locale = i18n.default_locale
 
                 if chat and chat.type == ChatType.PRIVATE:
-                    userdb = await Users.set_language(user=user, language_code=str(locale))
+                    userdb = await users.set_language(user=user, language_code=str(locale))
 
             data["user"] = userdb
 
         if chat:
-            chatdb = await Chats.get_chat(chat=chat)
+            chatdb = await chats.get_chat(chat=chat)
             if not chatdb and chat.type in (
                 ChatType.GROUP,
                 ChatType.SUPERGROUP,
             ):
-                chatdb = await Chats.set_language(chat=chat, language_code=i18n.default_locale)
+                chatdb = await chats.set_language(chat=chat, language_code=i18n.default_locale)
 
             data["chat"] = chatdb
 

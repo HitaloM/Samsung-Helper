@@ -7,15 +7,13 @@ from typing import Any, TypeVar
 
 import aiosqlite
 
-from sambot import app_dir
 from sambot.utils.logging import log
 
 T = TypeVar("T")
-DB_PATH: Path = app_dir / "sambot/database/db.sqlite3"
 
 
 class SqliteDBConn:
-    def __init__(self, db_name: Path = DB_PATH) -> None:
+    def __init__(self, db_name: Path) -> None:
         self.db_name = db_name
 
     async def __aenter__(self) -> aiosqlite.Connection:
@@ -43,12 +41,13 @@ class SqliteDBConn:
 class SqliteConnection:
     @staticmethod
     async def __make_request(
+        db: Path,
         sql: str,
         params: list[tuple] | tuple = (),
         fetch: bool = False,
         mult: bool = False,
     ) -> Any:
-        async with SqliteDBConn(DB_PATH) as conn:
+        async with SqliteDBConn(db) as conn:
             try:
                 cursor = (
                     await conn.executemany(sql, params)
@@ -68,13 +67,14 @@ class SqliteConnection:
 
     @staticmethod
     async def _make_request(
+        db: Path,
         sql: str,
         params: tuple = (),
         fetch: bool = False,
         mult: bool = False,
         model_type: type[T] | None = None,
     ) -> T | list[T] | str | None:
-        raw = await SqliteConnection.__make_request(sql, params, fetch, mult)
+        raw = await SqliteConnection.__make_request(db, sql, params, fetch, mult)
         if raw is None:
             return [] if mult else None
         if mult:

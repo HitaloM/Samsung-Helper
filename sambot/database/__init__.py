@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
-from .base import DB_PATH, SqliteConnection, SqliteDBConn
-from .chats import Chats
-from .users import Users
+from .base import SqliteConnection, SqliteDBConn
+from .chats import chats
+from .users import users
 
-__all__ = ("DB_PATH", "SqliteConnection", "SqliteDBConn", "Chats", "Users")
+__all__ = ("SqliteConnection", "SqliteDBConn", "chats", "users")
 
 
 async def create_tables() -> None:
-    await Chats.create_tables()
-    await Users.create_tables()
+    await chats.create_tables()
+    await users.create_tables()

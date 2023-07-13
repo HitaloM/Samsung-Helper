@@ -12,7 +12,7 @@ venv/
 
 # sambot
 data/config.env
-sambot/database/db.sqlite3*
+sambot/database/primary.sqlite3
 locales/*/*/*.mo
 
 # rye
