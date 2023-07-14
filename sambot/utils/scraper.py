@@ -201,6 +201,12 @@ class SamsungDeviceScraper:
         return device_meta
 
     async def start_scraping(self) -> None:
+        """
+        Scrapes device information from the GSM Arena website and saves it to the database.
+
+        Returns:
+            None
+        """
         status, data = await GSMSession.get_devices_list(1)
         doc = BeautifulSoup(data, "lxml")
         pages_count = int(

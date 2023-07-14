@@ -41,7 +41,8 @@ class Devices(SqliteConnection):
             FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
         );
         """
-        await Devices._make_request(self.db_path, sql)
+        for i in sql.split(";"):
+            await Devices._make_request(self.db_path, i)
 
     async def save(self, device: SamsungDeviceScraper.DeviceMeta) -> list | str | None:
         # delete old data
@@ -54,10 +55,12 @@ class Devices(SqliteConnection):
         await Devices._make_request(self.db_path, sql, params)
 
         sql = """
-            DELETE FROM details WHERE DeviceID = ?;
-            DELETE FROM models WHERE DeviceID = ?;
-            DELETE FROM devices WHERE DeviceID = ?;
+        DELETE FROM details WHERE DeviceID = ?;
+        DELETE FROM models WHERE DeviceID = ?;
+        DELETE FROM devices WHERE DeviceID = ?;
         """
+        params = (device.id, device.id, device.id)
+        await Devices._make_request(self.db_path, sql, params)
 
         # insert new data
         sql = """

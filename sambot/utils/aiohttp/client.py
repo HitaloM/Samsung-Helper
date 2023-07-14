@@ -58,7 +58,14 @@ class AiohttpBaseClient:
             json,
             params,
         )
-        async with session.request(method, url, params=params, json=json, data=data) as response:
+        async with session.request(
+            method,
+            url,
+            params=params,
+            json=json,
+            data=data,
+            **kwargs,
+        ) as response:
             status = response.status
             if get_text:
                 result = await response.text()
