@@ -170,10 +170,10 @@ class SamsungDeviceScraper:
         soup = BeautifulSoup(data, "lxml")
         tables = soup.select("#specs-list > table")
         for table in tables:
-            category = table.select_one("tbody > tr:nth-child(1) > th")
+            category = table.select("table > tr > th")[0].text
             if category:
-                category = category.get_text()
-                table_rows = table.select("tbody > tr")
+                table_rows = table.select("table > tr")
+
                 inner_map = device_meta.details.get(category, {})
                 for row in table_rows:
                     header = row.select_one("td.ttl")
@@ -185,6 +185,7 @@ class SamsungDeviceScraper:
         normalized_models = self.get_normalized_models(device_meta)
         device_meta.models.extend(normalized_models)
         device_meta.model_supername = self.get_model_supername(device_meta)
+
         for model in device_meta.models:
             try:
                 status, data = await RegionsSession.get_regions(model)
@@ -196,7 +197,7 @@ class SamsungDeviceScraper:
                 region_set = {element.text for element in region_elements}
                 device_meta.regions[model] = region_set
             except Exception as e:
-                log.error("Failed to get regions for model %s: %s", model, e)
+                log.error("[DeviceScraper] - Failed to get regions for model %s: %s", model, e)
 
         return device_meta
 
@@ -207,25 +208,32 @@ class SamsungDeviceScraper:
         Returns:
             None
         """
+        log.info("[DeviceScraper] - Starting device scraping")
         status, data = await GSMSession.get_devices_list(1)
         doc = BeautifulSoup(data, "lxml")
-        pages_count = int(
-            doc.select("#body > div > div.review-nav.pullNeg.col.pushT10 > div.nav-pages > a")[
-                -1
-            ].text
-        )
+        try:
+            pages_count = int(
+                doc.select("#body > div > div.review-nav.pullNeg.col.pushT10 > div.nav-pages > a")[
+                    -1
+                ].text
+            )
+        except Exception as e:
+            log.error("[DeviceScraper] - Failed to get pages count: %s", e)
+            return
         log.info("[DeviceScraper] - Found %d pages of devices", pages_count)
 
         devices = []
         for i in range(1, pages_count + 1):
-            device_meta = self.fetch_page(i)
-            devices.append(device_meta)
+            device_meta = await self.fetch_page(i)
+            devices.extend(device_meta)
 
         log.info("[DeviceScraper] - %d total devices", len(devices))
         devices = [
             device for device in devices if "Galaxy" in device.name and "Watch" not in device.name
         ]
         log.info("[DeviceScraper] - %d filtered devices (Stage 1)", len(devices))
+
+        details_devices = []
         for i in range(len(devices)):
             device = devices[i]
             log.info(
@@ -234,15 +242,17 @@ class SamsungDeviceScraper:
                 i + 1,
                 len(devices),
             )
-            await self.fill_details(device)
+            device = await self.fill_details(device)
+            details_devices.append(device)
 
-        devices = list(filter(self.is_device_relevant, devices))
+        devices = list(filter(self.is_device_relevant, details_devices))
         log.info("[DeviceScraper] - %d filtered devices (Stage 2)", len(devices))
         devices = sorted(devices, key=lambda x: self.get_model_supername(x))
 
         try:
             for device in devices:
                 await devices_db.save(device)
+            log.info("[DeviceScraper] - Saved %d devices to database", len(devices))
         except BaseException as e:
             log.error("[DeviceScraper] - Failed to save devices to database: %s", e)
 
