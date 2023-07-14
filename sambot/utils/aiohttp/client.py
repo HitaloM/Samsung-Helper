@@ -47,7 +47,6 @@ class AiohttpBaseClient:
         json: dict | None = None,
         data: dict | None = None,
         get_text: bool = False,
-        **kwargs: Any,
     ) -> tuple[int, str | Any]:
         session = await self._get_session()
 
@@ -64,7 +63,6 @@ class AiohttpBaseClient:
             params=params,
             json=json,
             data=data,
-            **kwargs,
         ) as response:
             status = response.status
             if get_text:
