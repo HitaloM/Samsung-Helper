@@ -11,6 +11,8 @@ from aiogram.utils.i18n import I18n
 from cashews import cache
 
 from sambot.config import config
+from sambot.utils.aiohttp import GSMClient
+from sambot.utils.aiohttp.scraper import RegionsClient
 from sambot.utils.logging import log
 from sambot.utils.systools import ShellException, shell_run
 
@@ -28,6 +30,10 @@ app_dir: Path = Path(__file__).parent.parent
 locales_dir: Path = app_dir / "locales"
 
 cache.setup(f"redis://{config.redis_host}", client_side=True)
+
+# aiohttp clients
+GSMSession = GSMClient()
+RegionsSession = RegionsClient()
 
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode=ParseMode.HTML)
 dp = Dispatcher()

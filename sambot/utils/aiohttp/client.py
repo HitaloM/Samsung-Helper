@@ -46,7 +46,9 @@ class AiohttpBaseClient:
         params: dict | None = None,
         json: dict | None = None,
         data: dict | None = None,
-    ) -> tuple[int, dict[str, Any]]:
+        get_text: bool = False,
+        **kwargs: Any,
+    ) -> tuple[int, str | Any]:
         session = await self._get_session()
 
         self.log.debug(
@@ -58,7 +60,10 @@ class AiohttpBaseClient:
         )
         async with session.request(method, url, params=params, json=json, data=data) as response:
             status = response.status
-            result = await response.json(loads=self.json_loads)
+            if get_text:
+                result = await response.text()
+            else:
+                result = await response.json(loads=self.json_loads)
 
         self.log.debug(
             "Got response %r %r with status %r and json %r",
