@@ -16,7 +16,7 @@ class SamsungFirmwareInfo:
     Class that provides methods to fetch firmware information from the Samsung Firmware website.
     """
 
-    class FirmwareInfo:
+    class FirmwareMeta:
         def __init__(
             self,
             model: str,
@@ -108,11 +108,13 @@ class SamsungFirmwareInfo:
             """
             if len(old_pda) < 4:
                 return True
+
             if len(self.pda) < 4:
                 return False
 
             if self.get_major_version(self.pda) > self.get_major_version(old_pda):
                 return True
+
             if self.get_major_version(self.pda) == self.get_major_version(old_pda):
                 if self.get_build_date1(self.pda) > self.get_build_date1(old_pda):
                     return True
@@ -138,7 +140,7 @@ class SamsungFirmwareInfo:
         def __str__(self) -> str:
             return str(self.raw())
 
-    async def fetch_latest(self, model: str, region: str) -> FirmwareInfo | None:
+    async def fetch_latest(self, model: str, region: str) -> FirmwareMeta | None:
         try:
             status, data = await FWSession.get_device_doc(model, region)
             soup = BeautifulSoup(data, "lxml")
@@ -148,10 +150,9 @@ class SamsungFirmwareInfo:
                 magic = inp["value"].split("/")[3]  # type: ignore
 
                 status, data = await FWSession.get_device_eng(model, magic)
-
                 soup = BeautifulSoup(data, "lxml")
-                changelog_entries = soup.find_all(class_="row")
 
+                changelog_entries = soup.find_all(class_="row")
                 if len(changelog_entries) >= 2:
                     latest_entry = changelog_entries[1]
                     info = latest_entry.find_all(class_="col-md-3")
@@ -173,7 +174,7 @@ class SamsungFirmwareInfo:
                         if len(changelog_text) > 1:
                             changelog_txt = changelog_text[1].get_text().replace("<br>", "\n")
 
-                        return self.FirmwareInfo(
+                        return self.FirmwareMeta(
                             model=model,
                             region=region,
                             os_version=os_version,
@@ -185,8 +186,7 @@ class SamsungFirmwareInfo:
                         )
         except BaseException as e:
             log.error("[FW] Failed to fetch latest firmware info %s", e)
-
-        return None
+            return None
 
 
 FirmwareInfo = SamsungFirmwareInfo()

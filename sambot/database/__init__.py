@@ -2,14 +2,20 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 from .base import SqliteConnection, SqliteDBConn
-from .chats import chats
-from .devices import devices
-from .users import users
+from .chats import chats_db
+from .devices import devices_db
+from .users import users_db
 
-__all__ = ("SqliteConnection", "SqliteDBConn", "chats", "devices", "users")
+__all__ = (
+    "SqliteConnection",
+    "SqliteDBConn",
+    "chats_db",
+    "devices_db",
+    "users_db",
+)
 
 
 async def create_tables() -> None:
-    await chats.create_tables()
-    await users.create_tables()
-    await devices.create_tables()
+    await chats_db.create_tables()
+    await users_db.create_tables()
+    await devices_db.create_tables()

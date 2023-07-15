@@ -4,11 +4,8 @@
 from bs4 import BeautifulSoup
 
 from sambot import GSMSession, RegionsSession
-from sambot.database import devices as devices_db
+from sambot.database import devices_db
 from sambot.utils.logging import log
-
-GSMARENA_URL = "https://www.gsmarena.com/"
-DEVICES_LIST_URL = GSMARENA_URL + "samsung-phones-f-9-0-p{}.php"
 
 
 class SamsungDeviceScraper:

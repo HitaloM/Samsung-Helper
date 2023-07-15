@@ -8,7 +8,6 @@ from pathlib import Path
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.utils.i18n import I18n
-from cashews import cache
 
 from sambot.config import config
 from sambot.utils.aiohttp import GSMClient
@@ -29,8 +28,6 @@ log.info("Starting Samgung Helper Bot... | Version: %s", __version__)
 
 app_dir: Path = Path(__file__).parent.parent
 locales_dir: Path = app_dir / "locales"
-
-cache.setup(f"redis://{config.redis_host}", client_side=True)
 
 # aiohttp clients
 GSMSession = GSMClient()

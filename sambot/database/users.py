@@ -55,4 +55,4 @@ class Users(SqliteConnection):
         return r[0] if r and r[0] else 0
 
 
-users = Users()
+users_db = Users()

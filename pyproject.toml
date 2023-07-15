@@ -14,7 +14,6 @@ dependencies = [
     "loguru>=0.7.0",
     "meval>=2.5",
     "backoff>= 2.2.1",
-    "cashews[redis,speedup]>=6.1.0",
     "msgspec>=0.15.1",
     "sentry-sdk>=1.24.0",
     "pydantic>=2.0.2",

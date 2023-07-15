@@ -2,17 +2,15 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
-import sys
 from contextlib import suppress
 
 import sentry_sdk
 from aiogram import __version__ as aiogram_version
 from aiogram.exceptions import TelegramForbiddenError
 from aiosqlite import __version__ as aiosqlite_version
-from cashews.exceptions import CacheBackendInteractionError
 
 from sambot import __version__ as sambot_version
-from sambot import bot, cache, config, dp, i18n
+from sambot import bot, config, dp, i18n
 from sambot.database import create_tables
 from sambot.handlers import pm_menu
 from sambot.middlewares.acl import ACLMiddleware
@@ -21,11 +19,6 @@ from sambot.utils.logging import log
 
 
 async def main():
-    try:
-        await cache.ping()
-    except (CacheBackendInteractionError, TimeoutError):
-        sys.exit(log.critical("Can't connect to RedisDB! Exiting..."))
-
     if config.sentry_url:
         log.info("Starting sentry.io integraion...")
 
@@ -61,9 +54,6 @@ async def main():
     # resolve used update types
     useful_updates = dp.resolve_used_update_types()
     await dp.start_polling(bot, allowed_updates=useful_updates)
-
-    # clear cashews cache
-    await cache.clear()
 
 
 if __name__ == "__main__":

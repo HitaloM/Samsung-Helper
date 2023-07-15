@@ -49,17 +49,19 @@ class SqliteConnection:
     ) -> Any:
         async with SqliteDBConn(db) as conn:
             try:
-                cursor = (
-                    await conn.executemany(sql, params)
-                    if isinstance(params, list)
-                    else await conn.execute(sql, params)
-                )
+                if ";" in sql:
+                    await conn.executescript(sql)
+                else:
+                    cursor = (
+                        await conn.executemany(sql, params)
+                        if isinstance(params, list)
+                        else await conn.execute(sql, params)
+                    )
+                    if fetch:
+                        return await cursor.fetchall() if mult else await cursor.fetchone()
+                    await conn.commit()
             except BaseException as e:
-                log.error(e)
-            else:
-                if fetch:
-                    return await cursor.fetchall() if mult else await cursor.fetchone()
-                await conn.commit()
+                log.error("[SqliteConnection] - Failed to execute query: %s", e)
 
     @staticmethod
     def _convert_to_model(data: dict, model: type[T]) -> T:

@@ -4,7 +4,6 @@
 from pathlib import Path
 
 from sambot import app_dir
-from sambot.utils.scraper import SamsungDeviceScraper
 
 from .base import SqliteConnection
 
@@ -44,15 +43,16 @@ class Devices(SqliteConnection):
         for i in sql.split(";"):
             await Devices._make_request(self.db_path, i)
 
-    async def save(self, device: SamsungDeviceScraper.DeviceMeta) -> list | str | None:
+    async def save(self, device) -> list | str | None:
         # delete old data
         sql = "SELECT Model FROM models WHERE DeviceID = ?"
         params = (device.id,)
         model = await Devices._make_request(self.db_path, sql, params, fetch=True)
 
-        sql = "DELETE FROM regions WHERE Model = ?"
-        params = (model,)
-        await Devices._make_request(self.db_path, sql, params)
+        if model:
+            sql = "DELETE FROM regions WHERE Model = ?"
+            params = (model[0],)
+            await Devices._make_request(self.db_path, sql, params)
 
         sql = """
         DELETE FROM details WHERE DeviceID = ?;
@@ -64,7 +64,7 @@ class Devices(SqliteConnection):
 
         # insert new data
         sql = """
-        INSERT INTO devices (DeviceID, Name, URL, ImgURL, ShortDescription)
+        INSERT OR REPLACE INTO devices (DeviceID, Name, URL, ImgURL, ShortDescription)
         VALUES (?, ?, ?, ?, ?)
         """
         params = (
@@ -77,7 +77,7 @@ class Devices(SqliteConnection):
         await Devices._make_request(self.db_path, sql, params)
 
         for model in device.models:
-            sql = "INSERT INTO models (DeviceID, Model) VALUES (?, ?)"
+            sql = "INSERT OR REPLACE INTO models (DeviceID, Model) VALUES (?, ?)"
             params = (device.id, model)
             await Devices._make_request(self.db_path, sql, params)
 
@@ -85,13 +85,16 @@ class Devices(SqliteConnection):
             regions = device.regions.get(model)
             if regions:
                 for region in regions:
-                    sql = "INSERT INTO regions (Model, Region) VALUES (?, ?)"
+                    sql = "INSERT OR REPLACE INTO regions (Model, Region) VALUES (?, ?)"
                     params = (model, region)
                     await Devices._make_request(self.db_path, sql, params)
 
         for category in device.details:
             for prop in device.details.get(category, {}):
-                sql = "INSERT INTO details (DeviceID, Category, Name, Value) VALUES (?, ?, ?, ?)"
+                sql = """
+                    INSERT OR REPLACE INTO details (DeviceID, Category, Name, Value)
+                    VALUES (?, ?, ?, ?)
+                """
                 params = (
                     device.id,
                     category,
@@ -101,4 +104,4 @@ class Devices(SqliteConnection):
                 await Devices._make_request(self.db_path, sql, params)
 
 
-devices = Devices()
+devices_db = Devices()
