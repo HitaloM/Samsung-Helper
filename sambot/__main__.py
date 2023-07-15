@@ -18,7 +18,6 @@ from sambot.handlers import pm_menu
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
 from sambot.utils.logging import log
-from sambot.utils.scraper import DeviceScraper
 
 
 async def main():
@@ -45,8 +44,6 @@ async def main():
     dp.inline_query.middleware(MyI18nMiddleware(i18n=i18n))
 
     dp.include_routers(pm_menu.router)
-
-    await DeviceScraper.start_scraping()
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:

@@ -48,6 +48,9 @@ class SamsungDeviceScraper:
             """
             return self.__dict__
 
+        def __str__(self) -> str:
+            return str(self.raw())
+
     @staticmethod
     async def fetch_page(page: int) -> list[DeviceMeta]:
         """

@@ -48,7 +48,7 @@ class Devices(SqliteConnection):
         # delete old data
         sql = "SELECT Model FROM models WHERE DeviceID = ?"
         params = (device.id,)
-        model = await Devices._make_request(self.db_path, sql, params)
+        model = await Devices._make_request(self.db_path, sql, params, fetch=True)
 
         sql = "DELETE FROM regions WHERE Model = ?"
         params = (model,)
