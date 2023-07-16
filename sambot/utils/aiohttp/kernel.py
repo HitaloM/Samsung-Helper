@@ -2,7 +2,6 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
-from typing import Any
 
 from .client import AiohttpBaseClient, HttpResponseObject
 
@@ -21,16 +20,11 @@ class KernelClient(AiohttpBaseClient):
             get_text=True,
         )
 
-    async def download(self, headers: dict[str, str], data: Any) -> HttpResponseObject:
+    async def download_by_id(self, upload_id: str) -> HttpResponseObject:
         await asyncio.sleep(self.fetch_interval)
         return await self._make_request(
-            "POST",
-            url="/downSrcCode",
-            headers=headers,
-            data=data,
-            geat_binary=True,
+            "GET",
+            url=f"/downSrcMPop?uploadId={upload_id}",
+            get_text=True,
+            get_cookies=True,
         )
-
-    async def download_by_id(self, model: str) -> HttpResponseObject:
-        await asyncio.sleep(self.fetch_interval)
-        return await self._make_request("GET", url=f"/downSrcMPop?uploadId={model}")

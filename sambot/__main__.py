@@ -39,8 +39,11 @@ async def main():
 
     dp.include_routers(pm_menu.router)
 
-    a = await SamsungKernelInfo().fetch_latest("SM-S908B")
+    a = await SamsungKernelInfo().fetch_latest("SM-A015F")
     print(a)
+    if a:
+        a = await a.download()
+        print(a)
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:

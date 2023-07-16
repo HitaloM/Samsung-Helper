@@ -24,13 +24,11 @@ class HttpResponseObject:
         status: int,
         data: Any,
         headers: CIMultiDictProxy[str],
-        binary: bytes | None = None,
         cookies: SimpleCookie[str] | None = None,
     ) -> None:
         self.status = status
         self.data = data
         self.headers = headers
-        self.binary = binary
         self.cookies = cookies
 
 
@@ -66,7 +64,6 @@ class AiohttpBaseClient:
         headers: dict | None = None,
         data: dict | None = None,
         get_text: bool = False,
-        geat_binary: bool = False,
         get_cookies: bool = False,
     ) -> HttpResponseObject:
         session = await self._get_session()
@@ -92,12 +89,7 @@ class AiohttpBaseClient:
             else:
                 result = await response.json(loads=self.json_loads)
 
-            if geat_binary:
-                binary = await response.read()
-            else:
-                binary = None
-
-            cookies = response.cookies if get_cookies else None
+            cookies = session.cookie_jar if get_cookies else None
 
         self.log.debug(
             "Got response %r %r with status %r and json %r",
@@ -110,7 +102,6 @@ class AiohttpBaseClient:
             status,
             result,
             response.headers,
-            binary=binary,
             cookies=cookies,
         )
 
