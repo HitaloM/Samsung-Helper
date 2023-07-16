@@ -12,7 +12,7 @@ from .base import SqliteConnection
 
 
 class Users(SqliteConnection):
-    db_path: Path = app_dir / "sambot/database/primary.sqlite3"
+    db_path: Path = app_dir / "sambot/database/primary.db"
 
     async def create_tables(self) -> None:
         sql = """

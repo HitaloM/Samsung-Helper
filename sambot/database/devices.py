@@ -9,7 +9,7 @@ from .base import SqliteConnection
 
 
 class Devices(SqliteConnection):
-    db_path: Path = app_dir / "sambot/database/devices.sqlite3"
+    db_path: Path = app_dir / "sambot/database/devices.db"
 
     async def create_tables(self) -> None:
         sql = """
@@ -102,6 +102,17 @@ class Devices(SqliteConnection):
                     device.details.get(category, {}).get(prop),
                 )
                 await Devices._make_request(self.db_path, sql, params)
+
+    async def get_all_models(self) -> list | str | None:
+        sql = "SELECT Model FROM models"
+        r = await Devices._make_request(self.db_path, sql, fetch=True, mult=True)
+        return [i[0] for i in r] if r else None
+
+    async def get_regions_by_model(self, model: str) -> list | str | None:
+        sql = "SELECT Region FROM regions WHERE Model = ?"
+        params = (model,)
+        r = await Devices._make_request(self.db_path, sql, params, fetch=True, mult=True)
+        return [i[0] for i in r] if r else None
 
 
 devices_db = Devices()

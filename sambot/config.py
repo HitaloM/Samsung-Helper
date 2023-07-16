@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     sentry_url: AnyHttpUrl | None = None
     sudoers: list[int] = [918317361]
     logs_channel: int | None = None
+    fw_channel: int | None = None
+    kn_channel: int | None = None
 
     class Config:
         env_file = "data/config.env"
