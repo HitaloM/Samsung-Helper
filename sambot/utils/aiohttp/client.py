@@ -5,15 +5,33 @@ import asyncio
 import logging
 import ssl
 from collections.abc import Callable
+from http.cookies import SimpleCookie
 from typing import Any
 
 import backoff
 import msgspec
 from aiohttp import ClientError, ClientSession, TCPConnector
+from multidict import CIMultiDictProxy
 from yarl import URL
 
 _JsonLoads = Callable[..., Any]
 _JsonDumps = Callable[..., str]
+
+
+class HttpResponseObject:
+    def __init__(
+        self,
+        status: int,
+        data: Any,
+        headers: CIMultiDictProxy[str],
+        binary: bytes | None = None,
+        cookies: SimpleCookie[str] | None = None,
+    ) -> None:
+        self.status = status
+        self.data = data
+        self.headers = headers
+        self.binary = binary
+        self.cookies = cookies
 
 
 class AiohttpBaseClient:
@@ -45,9 +63,12 @@ class AiohttpBaseClient:
         url: str | URL,
         params: dict | None = None,
         json: dict | None = None,
+        headers: dict | None = None,
         data: dict | None = None,
         get_text: bool = False,
-    ) -> tuple[int, str | Any]:
+        geat_binary: bool = False,
+        get_cookies: bool = False,
+    ) -> HttpResponseObject:
         session = await self._get_session()
 
         self.log.debug(
@@ -62,6 +83,7 @@ class AiohttpBaseClient:
             url,
             params=params,
             json=json,
+            headers=headers,
             data=data,
         ) as response:
             status = response.status
@@ -70,6 +92,13 @@ class AiohttpBaseClient:
             else:
                 result = await response.json(loads=self.json_loads)
 
+            if geat_binary:
+                binary = await response.read()
+            else:
+                binary = None
+
+            cookies = response.cookies if get_cookies else None
+
         self.log.debug(
             "Got response %r %r with status %r and json %r",
             method,
@@ -77,7 +106,13 @@ class AiohttpBaseClient:
             status,
             result,
         )
-        return status, result
+        return HttpResponseObject(
+            status,
+            result,
+            response.headers,
+            binary=binary,
+            cookies=cookies,
+        )
 
     async def close(self) -> None:
         if not self._session:

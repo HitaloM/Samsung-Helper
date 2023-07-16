@@ -38,6 +38,12 @@ class SamsungFirmwareInfo:
             self.changelog = changelog
 
         def download_url(self) -> str:
+            """
+            Returns the download URL for the firmware represented by this FirmwareMeta object.
+
+            Returns:
+                str: The download URL for the firmware.
+            """
             return f"https://samfw.com/firmware/{self.model}/{self.region}/{self.pda}"
 
         @staticmethod
@@ -141,16 +147,27 @@ class SamsungFirmwareInfo:
             return str(self.raw())
 
     async def fetch_latest(self, model: str, region: str) -> FirmwareMeta | None:
+        """
+        Fetches the latest firmware information for the given model and region.
+
+        Args:
+            model (str): The model of the device.
+            region (str): The region of the device.
+
+        Returns:
+            FirmwareMeta | None: The latest firmware information for the given model and region,
+            or None if the information could not be fetched.
+        """
         try:
-            status, data = await FWSession.get_device_doc(model, region)
-            soup = BeautifulSoup(data, "lxml")
+            r = await FWSession.get_device_doc(model, region)
+            soup = BeautifulSoup(r.data, "lxml")
             inp = soup.find(id="dflt_page")
 
             if inp is not None:
                 magic = inp["value"].split("/")[3]  # type: ignore
 
-                status, data = await FWSession.get_device_eng(model, magic)
-                soup = BeautifulSoup(data, "lxml")
+                r = await FWSession.get_device_eng(model, magic)
+                soup = BeautifulSoup(r.data, "lxml")
 
                 changelog_entries = soup.find_all(class_="row")
                 if len(changelog_entries) >= 2:
@@ -185,7 +202,7 @@ class SamsungFirmwareInfo:
                             changelog=changelog_txt,
                         )
         except BaseException as e:
-            log.error("[FW] Failed to fetch latest firmware info %s", e)
+            log.error("[SamsungFirmwareInfo] Failed to fetch latest firmware info %s", e)
             return None
 
 

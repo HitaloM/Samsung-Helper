@@ -59,8 +59,8 @@ class SamsungDeviceScraper:
         Returns:
             list[DeviceMeta]: A list of DeviceMeta objects representing the devices on the page.
         """
-        status, data = await GSMSession.get_devices_list(page)
-        soup = BeautifulSoup(data, "lxml")
+        r = await GSMSession.get_devices_list(page)
+        soup = BeautifulSoup(r.data, "lxml")
         elements = soup.select("#review-body > div.makers > ul > li")
 
         device_list = []
@@ -166,8 +166,8 @@ class SamsungDeviceScraper:
         Returns:
             DeviceMeta: The DeviceMeta object with the filled details.
         """
-        status, data = await GSMSession.get_device(str(device_meta.url))
-        soup = BeautifulSoup(data, "lxml")
+        r = await GSMSession.get_device(str(device_meta.url))
+        soup = BeautifulSoup(r.data, "lxml")
         tables = soup.select("#specs-list > table")
         for table in tables:
             category = table.select("table > tr > th")[0].text
@@ -188,8 +188,8 @@ class SamsungDeviceScraper:
 
         for model in device_meta.models:
             try:
-                status, data = await RegionsSession.get_regions(model)
-                document = BeautifulSoup(data, "lxml")
+                r = await RegionsSession.get_regions(model)
+                document = BeautifulSoup(r.data, "lxml")
                 region_elements = document.select(
                     "body > div.intro.bg-light > div > div > div > div > "
                     "div.card-body.text-justify.card-csc > div.item_csc > a > b"
@@ -209,8 +209,8 @@ class SamsungDeviceScraper:
             None
         """
         log.info("[DeviceScraper] - Starting device scraping")
-        status, data = await GSMSession.get_devices_list(1)
-        doc = BeautifulSoup(data, "lxml")
+        r = await GSMSession.get_devices_list(1)
+        doc = BeautifulSoup(r.data, "lxml")
         try:
             pages_count = int(
                 doc.select("#body > div > div.review-nav.pullNeg.col.pushT10 > div.nav-pages > a")[

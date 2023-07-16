@@ -11,8 +11,9 @@ from aiogram.utils.i18n import I18n
 
 from sambot.config import config
 from sambot.utils.aiohttp import GSMClient
+from sambot.utils.aiohttp.devices import RegionsClient
 from sambot.utils.aiohttp.firmware import FWClient
-from sambot.utils.aiohttp.scraper import RegionsClient
+from sambot.utils.aiohttp.kernel import KernelClient
 from sambot.utils.logging import log
 from sambot.utils.systools import ShellException, shell_run
 
@@ -33,6 +34,7 @@ locales_dir: Path = app_dir / "locales"
 GSMSession = GSMClient()
 RegionsSession = RegionsClient()
 FWSession = FWClient()
+KernelSession = KernelClient()
 
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode=ParseMode.HTML)
 dp = Dispatcher()

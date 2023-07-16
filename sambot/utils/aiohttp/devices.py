@@ -2,9 +2,8 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
-from typing import Any
 
-from .client import AiohttpBaseClient
+from .client import AiohttpBaseClient, HttpResponseObject
 
 
 class GSMClient(AiohttpBaseClient):
@@ -13,7 +12,7 @@ class GSMClient(AiohttpBaseClient):
         self.fetch_interval: int = 3
         super().__init__(base_url=self.base_url)
 
-    async def get_devices_list(self, page: int) -> tuple[int, str | Any]:
+    async def get_devices_list(self, page: int) -> HttpResponseObject:
         await asyncio.sleep(self.fetch_interval)
         return await self._make_request(
             "GET",
@@ -21,7 +20,7 @@ class GSMClient(AiohttpBaseClient):
             get_text=True,
         )
 
-    async def get_device(self, url: str) -> tuple[int, str | Any]:
+    async def get_device(self, url: str) -> HttpResponseObject:
         await asyncio.sleep(self.fetch_interval)
         return await self._make_request(
             "GET",
@@ -36,7 +35,7 @@ class RegionsClient(AiohttpBaseClient):
         self.fetch_interval: int = 3
         super().__init__(base_url=self.base_url)
 
-    async def get_regions(self, model: str) -> tuple[int, str | Any]:
+    async def get_regions(self, model: str) -> HttpResponseObject:
         await asyncio.sleep(self.fetch_interval)
         return await self._make_request(
             "GET",
