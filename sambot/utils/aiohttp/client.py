@@ -5,7 +5,6 @@ import asyncio
 import logging
 import ssl
 from collections.abc import Callable
-from http.cookies import SimpleCookie
 from typing import Any
 
 import backoff
@@ -24,12 +23,10 @@ class HttpResponseObject:
         status: int,
         data: Any,
         headers: CIMultiDictProxy[str],
-        cookies: SimpleCookie[str] | None = None,
     ) -> None:
         self.status = status
         self.data = data
         self.headers = headers
-        self.cookies = cookies
 
 
 class AiohttpBaseClient:
@@ -64,7 +61,6 @@ class AiohttpBaseClient:
         headers: dict | None = None,
         data: dict | None = None,
         get_text: bool = False,
-        get_cookies: bool = False,
     ) -> HttpResponseObject:
         session = await self._get_session()
 
@@ -89,8 +85,6 @@ class AiohttpBaseClient:
             else:
                 result = await response.json(loads=self.json_loads)
 
-            cookies = session.cookie_jar if get_cookies else None
-
         self.log.debug(
             "Got response %r %r with status %r and json %r",
             method,
@@ -98,12 +92,7 @@ class AiohttpBaseClient:
             status,
             result,
         )
-        return HttpResponseObject(
-            status,
-            result,
-            response.headers,
-            cookies=cookies,
-        )
+        return HttpResponseObject(status, result, response.headers)
 
     async def close(self) -> None:
         if not self._session:

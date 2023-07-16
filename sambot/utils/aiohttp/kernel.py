@@ -19,12 +19,3 @@ class KernelClient(AiohttpBaseClient):
             url=f"/uploadSearch?searchValue={model}",
             get_text=True,
         )
-
-    async def download_by_id(self, upload_id: str) -> HttpResponseObject:
-        await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/downSrcMPop?uploadId={upload_id}",
-            get_text=True,
-            get_cookies=True,
-        )

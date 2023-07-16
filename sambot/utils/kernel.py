@@ -2,13 +2,13 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import re
-from http.cookies import SimpleCookie
 from pathlib import Path
 from urllib.parse import urlencode
 
 import aiofiles
 import aiohttp
 from bs4 import BeautifulSoup
+from yarl import URL
 
 from sambot import KernelSession, app_dir
 from sambot.utils.logging import log
@@ -138,7 +138,7 @@ class SamsungKernelInfo:
         def __str__(self) -> str:
             return str(self.raw())
 
-        async def download(self, folder: Path = app_dir) -> Path | None:
+        async def download(self, folder: Path = app_dir / "/data/downloads/") -> Path | None:
             """
             Downloads the kernel source code archive for the device represented by this DeviceMeta
             object.
@@ -151,13 +151,19 @@ class SamsungKernelInfo:
                 failed.
             """
             dst = Path(folder) / f"{self.model}-{self.pda}.zip"
-            r = await KernelSession.download_by_id(self.upload_id)
-            doc = BeautifulSoup(r.data, "lxml")
-            _csrfElem = doc.find_all(attrs={"name": "_csrf"})
+            async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar()) as session:
+                r = await session.get(
+                    f"{OSS_BASE_URL}/downSrcMPop?uploadId={self.upload_id}",
+                    allow_redirects=False,
+                )
+                data = await r.text()
+
+            doc = BeautifulSoup(data, "lxml")
+            _csrf_elem = doc.find_all(attrs={"name": "_csrf"})
             checkboxes = doc.find_all(attrs={"type": "checkbox"})
 
-            if len(_csrfElem) > 0 and len(checkboxes) > 1:
-                _csrf = _csrfElem[0]["value"]
+            if len(_csrf_elem) > 0 and len(checkboxes) > 1:
+                _csrf = _csrf_elem[0]["value"]
                 attach_ids = None
 
                 if self.patch_kernel is None:
@@ -188,33 +194,35 @@ class SamsungKernelInfo:
                         f"_csrf={_csrf}&uploadId={self.upload_id}&attachIds={attach_ids}"
                         f"&downloadPurpose=ETC&{urlencode({'token': token})}"
                     )
+                    query_bin = query.encode()
 
-                    cookies_dict = {}
-                    cookies = SimpleCookie()
-                    if r.cookies:
-                        for cookie in r.cookies:
-                            cookies[cookie.key] = cookie.value  # type: ignore
+                    cookies_str = ""
+                    cookies = session.cookie_jar.filter_cookies(URL(f"{OSS_BASE_URL}"))
+                    for key, cookie in cookies.items():
+                        cookies_str += f"{key}={cookie.value}; "
 
-                    for key, morsel in cookies.items():
-                        cookies_dict[key] = morsel.value
+                    cookies_str += "__COM_SPEED=H"
+                    cookies_str += "; device_type=pc"
+                    cookies_str += "; fileDownload=true"
 
-                    cookies_dict["__COM_SPEED"] = "H"
-                    cookies_dict["device_type"] = "pc"
-                    cookies_dict["fileDownload"] = "true"
+                    cookies_dict = {
+                        item.split("=")[0].strip(): item.split("=")[1].strip()
+                        for item in cookies_str.split(";")
+                        if item
+                    }
 
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,"
                         "application/xml;q=0.9,image/webp,*/*;q=0.8",
                         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                        "Content-Length": str(len(query)),
-                        "Cookie": "; ".join([f"{k}={v}" for k, v in cookies_dict.items()]),
+                        "Content-Length": str(len(query_bin)),
+                        "Cookie": cookies_str,
                         "Origin": OSS_BASE_URL,
                         "Referer": f"{OSS_SEARCH_URL}{self.model}",
                         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:90.0) "
                         "Gecko/20100101 Firefox/90.0",
                     }
 
-                    print(headers)
                     timeout = aiohttp.ClientTimeout(total=3600)
                     async with aiohttp.ClientSession(
                         cookies=cookies_dict, timeout=timeout
@@ -222,14 +230,18 @@ class SamsungKernelInfo:
                         r = await session.post(
                             "https://opensource.samsung.com/downSrcCode",
                             headers=headers,
-                            data=query,
+                            data=query_bin,
                         )
-
-                    print(r.status)
-                    print(r.headers)
-                    if r.status == 200 and r.headers.get("Content-Transfer-Encoding") == "binary":
-                        async with aiofiles.open(dst, "wb") as f:
-                            await f.write(await r.read())
+                        if (
+                            r.status == 200
+                            and r.headers.get("Content-Transfer-Encoding") == "binary"
+                        ):
+                            async with aiofiles.open(dst, "wb") as f:
+                                while True:
+                                    chunk = await r.content.read(1024)
+                                    if not chunk:
+                                        break
+                                    await f.write(chunk)
 
                         return dst
 
