@@ -8,8 +8,6 @@ from bs4 import BeautifulSoup
 from sambot import FWSession
 from sambot.utils.logging import log
 
-DATE_FORMAT: str = "%Y-%m-%d"
-
 
 class SamsungFirmwareInfo:
     """
@@ -47,7 +45,7 @@ class SamsungFirmwareInfo:
             return f"https://samfw.com/firmware/{self.model}/{self.region}/{self.pda}"
 
         @staticmethod
-        def get_major_version(pda: str) -> int:
+        def get_major_version(pda: str) -> str:
             """
             Returns the major version of the Android operating system represented by the given
             PDA string.
@@ -56,12 +54,12 @@ class SamsungFirmwareInfo:
                 pda (str): The PDA string representing the firmware version.
 
             Returns:
-                int: The major version of the Android operating system.
+                str: The major version of the Android operating system.
             """
-            return int(pda[-4])
+            return pda[-4]
 
         @staticmethod
-        def get_build_date1(pda: str) -> int:
+        def get_build_year(pda: str) -> str:
             """
             Returns the build date of the firmware version represented by the given PDA string.
 
@@ -69,12 +67,12 @@ class SamsungFirmwareInfo:
                 pda (str): The PDA string representing the firmware version.
 
             Returns:
-                int: The build date of the firmware version.
+                str: The build date of the firmware version.
             """
-            return int(pda[-3])
+            return pda[-3]
 
         @staticmethod
-        def get_build_date2(pda: str) -> int:
+        def get_build_month(pda: str) -> str:
             """
             Returns the build date of the firmware version represented by the given PDA string.
 
@@ -82,12 +80,12 @@ class SamsungFirmwareInfo:
                 pda (str): The PDA string representing the firmware version.
 
             Returns:
-                int: The build date of the firmware version.
+                str: The build date of the firmware version.
             """
-            return int(pda[-2])
+            return pda[-2]
 
         @staticmethod
-        def get_minor_version(pda: str) -> int:
+        def get_build_id(pda: str) -> str:
             """
             Returns the minor version of the Android operating system represented by the given PDA
             string.
@@ -98,7 +96,7 @@ class SamsungFirmwareInfo:
             Returns:
                 int: The minor version of the Android operating system.
             """
-            return int(pda[-1])
+            return pda[-1]
 
         def is_newer_than(self, old_pda) -> bool:
             """
@@ -122,15 +120,15 @@ class SamsungFirmwareInfo:
                 return True
 
             if self.get_major_version(self.pda) == self.get_major_version(old_pda):
-                if self.get_build_date1(self.pda) > self.get_build_date1(old_pda):
+                if self.get_build_year(self.pda) > self.get_build_year(old_pda):
                     return True
 
-                if self.get_build_date1(self.pda) == self.get_build_date1(old_pda):
-                    if self.get_build_date2(self.pda) > self.get_build_date2(old_pda):
+                if self.get_build_year(self.pda) == self.get_build_year(old_pda):
+                    if self.get_build_month(self.pda) > self.get_build_month(old_pda):
                         return True
 
-                    if self.get_build_date2(self.pda) == self.get_build_date2(old_pda):
-                        return self.get_minor_version(self.pda) > self.get_minor_version(old_pda)
+                    if self.get_build_month(self.pda) == self.get_build_month(old_pda):
+                        return self.get_build_id(self.pda) > self.get_build_id(old_pda)
 
             return False
 
@@ -196,8 +194,8 @@ class SamsungFirmwareInfo:
                             region=region,
                             os_version=os_version,
                             pda=pda,
-                            build_date=datetime.strptime(release_date, DATE_FORMAT),
-                            securitypatch=datetime.strptime(security_patch, DATE_FORMAT),
+                            build_date=datetime.strptime(release_date, "%Y-%m-%d"),
+                            securitypatch=datetime.strptime(security_patch, "%Y-%m-%d"),
                             name=name,
                             changelog=changelog_txt,
                         )

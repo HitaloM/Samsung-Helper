@@ -56,8 +56,8 @@ async def sync_firmwares() -> None:
                         f"Model: {info.model}\n"
                         f"OS Version: {info.os_version}\n"
                         f"PDA Version: {info.pda}\n"
-                        f"Release Date: {info.build_date}\n"
-                        f"Security Patch Level: {info.securitypatch}\n\n"
+                        f"Release Date: {info.build_date.strftime('%Y-%m-%d')}\n"
+                        f"Security Patch Level: {info.securitypatch.strftime('%Y-%m-%d')}\n\n"
                         f"Changelog:\n{info.changelog}"
                     )
 

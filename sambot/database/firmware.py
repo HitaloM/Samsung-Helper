@@ -34,7 +34,9 @@ class Firmwares(SqliteConnection):
     async def set_pda(self, model: str, pda: str) -> None:
         if not await Firmwares.check_model_exists(self, model):
             sql = "INSERT INTO pda (Model, PDA) VALUES (?, ?)"
+            params = (model, pda)
         else:
             sql = "UPDATE pda SET PDA = ? WHERE Model LIKE ?"
-        params = (pda, model)
+            params = (pda, model)
+
         await Firmwares._make_request(self.db_path, sql, params)
