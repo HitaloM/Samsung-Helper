@@ -138,7 +138,7 @@ class SamsungKernelInfo:
         def __str__(self) -> str:
             return str(self.raw())
 
-        async def download(self, folder: Path = app_dir / "/data/downloads/") -> Path | None:
+        async def download(self, folder: Path = app_dir / "data/downloads/") -> Path | None:
             """
             Downloads the kernel source code archive for the device represented by this DeviceMeta
             object.
@@ -172,20 +172,27 @@ class SamsungKernelInfo:
                     rows = doc.find_all("tr")
 
                     for row in rows:
-                        rowData = row.find_all("td")
+                        row_data = row.find_all("td")
 
-                        if len(rowData) >= 2:
-                            download_file = rowData[1].get_text()
+                        if len(row_data) >= 2:
+                            download_file = row_data[1].get_text()
                             if download_file.endswith(f"{self.pda}.zip"):
                                 checkboxes = row.find_all(attrs={"type": "checkbox"})
 
                             if len(checkboxes) > 0:
-                                attach_ids = checkboxes[0]["id"]
+                                attach_ids = [
+                                    checkbox["id"]
+                                    for checkbox in checkboxes
+                                    if checkbox["id"].isdigit()
+                                ]
                                 break
 
                 if attach_ids is None or attach_ids == "":
                     log.error("[SamsungKernelInfo] - Did not find attachment for %s", str(self))
                     return None
+
+                if isinstance(attach_ids, list):
+                    attach_ids = ",".join(attach_ids)
 
                 token_elem = doc.find(id="token")
                 if token_elem is not None:
@@ -194,6 +201,7 @@ class SamsungKernelInfo:
                         f"_csrf={_csrf}&uploadId={self.upload_id}&attachIds={attach_ids}"
                         f"&downloadPurpose=ETC&{urlencode({'token': token})}"
                     )
+                    print(query)
                     query_bin = query.encode()
 
                     cookies_str = ""
@@ -223,7 +231,7 @@ class SamsungKernelInfo:
                         "Gecko/20100101 Firefox/90.0",
                     }
 
-                    timeout = aiohttp.ClientTimeout(total=3600)
+                    timeout = aiohttp.ClientTimeout(total=5400)
                     async with aiohttp.ClientSession(
                         cookies=cookies_dict, timeout=timeout
                     ) as session:
@@ -237,10 +245,7 @@ class SamsungKernelInfo:
                             and r.headers.get("Content-Transfer-Encoding") == "binary"
                         ):
                             async with aiofiles.open(dst, "wb") as f:
-                                while True:
-                                    chunk = await r.content.read(1024)
-                                    if not chunk:
-                                        break
+                                async for chunk in r.content.iter_chunked(16144):
                                     await f.write(chunk)
 
                         return dst
@@ -299,3 +304,6 @@ class SamsungKernelInfo:
         except BaseException:
             log.error("[SamsungKernelInfo] - Failed to fetch latest kernel for model %s", model)
             return None
+
+
+KernelInfo = SamsungKernelInfo()

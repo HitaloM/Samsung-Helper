@@ -1,1 +1,3 @@
-# Samsung Helper
+=============================
+Samsung Helper - Telegram Bot
+=============================

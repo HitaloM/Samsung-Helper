@@ -187,7 +187,7 @@ class SamsungFirmwareInfo:
                         changelog_text = soup.find_all("span")
 
                         if len(changelog_text) > 1:
-                            changelog_txt = changelog_text[1].get_text().replace("<br>", "\n")
+                            changelog_txt = changelog_text[1].get_text().replace("<br/>", "\n")
 
                         return self.FirmwareMeta(
                             model=model,

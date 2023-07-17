@@ -15,8 +15,8 @@ from sambot.database import create_tables
 from sambot.handlers import pm_menu
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
+from sambot.utils.kernel import KernelInfo
 from sambot.utils.logging import log
-from sambot.utils.notify import sync_firmwares
 
 
 async def main():
@@ -39,7 +39,11 @@ async def main():
 
     dp.include_routers(pm_menu.router)
 
-    await sync_firmwares()
+    # await sync_firmwares()
+    a = await KernelInfo.fetch_latest("SM-S908B")
+    print(a)
+    if a:
+        await a.download()
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:
