@@ -48,17 +48,19 @@ async def sync_firmwares() -> None:
                 pda = await firmwares_db.get_pda(model)
                 if pda and info.is_newer_than(pda):
                     keyboard = InlineKeyboardBuilder()
-                    keyboard.button(text="Download", url=info.download_url())
+                    keyboard.button(text="Download ⬇️", url=info.download_url())
 
+                    build_date = info.build_date.strftime("%Y-%m-%d")
+                    securitypatch = info.securitypatch.strftime("%Y-%m-%d")
                     text = (
-                        "New firmware update available\n\n"
-                        f"Device: {info.name}\n"
-                        f"Model: {info.model}\n"
-                        f"OS Version: {info.os_version}\n"
-                        f"PDA Version: {info.pda}\n"
-                        f"Release Date: {info.build_date.strftime('%Y-%m-%d')}\n"
-                        f"Security Patch Level: {info.securitypatch.strftime('%Y-%m-%d')}\n\n"
-                        f"Changelog:\n{info.changelog}"
+                        "<b>New firmware update available!</b>\n\n"
+                        f"<b>Device:</b> <code>{info.name}</code>\n"
+                        f"<b>Model:</b> <code>{info.model}</code>\n"
+                        f"<b>Android Version:</b> <code>{info.os_version}</code>\n"
+                        f"<b>Build Number:</b> <code>{info.pda}</code>\n"
+                        f"<b>Release Date:</b> <code>{build_date}</code>\n"
+                        f"<b>Security Patch Level:</b> <code>{securitypatch}</code>\n\n"
+                        f"<b>Changelog:</b>\n{info.changelog}"
                     )
 
                     await bot.send_message(

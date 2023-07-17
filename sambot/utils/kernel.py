@@ -201,7 +201,6 @@ class SamsungKernelInfo:
                         f"_csrf={_csrf}&uploadId={self.upload_id}&attachIds={attach_ids}"
                         f"&downloadPurpose=ETC&{urlencode({'token': token})}"
                     )
-                    print(query)
                     query_bin = query.encode()
 
                     cookies_str = ""
