@@ -8,7 +8,7 @@ license = { file = "LICENSE" }
 requires-python = ">=3.11"
 authors = [{ name = "Hitalo M." }]
 dependencies = [
-    "aiogram[fast,i18n] @ git+https://github.com/aiogram/aiogram.git",
+    "aiogram[fast,i18n]>=3.0.0b8",
     "aiohttp[speedups]>=3.8.4",
     "aiosqlite>=0.19.0",
     "loguru>=0.7.0",
@@ -20,6 +20,8 @@ dependencies = [
     "pydantic-settings>=2.0.1",
     "bs4>=0.0.1",
     "lxml>=4.9.3",
+    "aiofile>=3.8.7",
+    "aiocron>=1.8",
 ]
 
 [build-system]

@@ -201,7 +201,7 @@ class SamsungDeviceScraper:
 
         return device_meta
 
-    async def start_scraping(self) -> None:
+    async def sync_devices(self) -> None:
         """
         Scrapes device information from the GSM Arena website and saves it to the database.
 

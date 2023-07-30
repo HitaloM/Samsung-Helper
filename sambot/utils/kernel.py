@@ -5,8 +5,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlencode
 
-import aiofiles
 import aiohttp
+from aiofile import async_open
 from bs4 import BeautifulSoup
 from yarl import URL
 
@@ -243,7 +243,7 @@ class SamsungKernelInfo:
                             r.status == 200
                             and r.headers.get("Content-Transfer-Encoding") == "binary"
                         ):
-                            async with aiofiles.open(dst, "wb") as f:
+                            async with async_open(dst, "wb") as f:
                                 async for chunk in r.content.iter_chunked(16144):
                                     await f.write(chunk)
 

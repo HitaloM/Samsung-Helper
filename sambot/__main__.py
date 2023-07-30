@@ -4,6 +4,7 @@
 import asyncio
 from contextlib import suppress
 
+import aiocron
 import sentry_sdk
 from aiogram import __version__ as aiogram_version
 from aiogram.exceptions import TelegramForbiddenError
@@ -15,6 +16,7 @@ from sambot.database import create_tables
 from sambot.handlers import pm_menu
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
+from sambot.utils.devices import DeviceScraper
 from sambot.utils.logging import log
 from sambot.utils.notify import sync_firmwares
 
@@ -34,12 +36,11 @@ async def main():
     dp.message.middleware(MyI18nMiddleware(i18n=i18n))
     dp.callback_query.middleware(ACLMiddleware())
     dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
-    dp.inline_query.middleware(ACLMiddleware())
-    dp.inline_query.middleware(MyI18nMiddleware(i18n=i18n))
 
     dp.include_routers(pm_menu.router)
 
-    await sync_firmwares()
+    aiocron.crontab("0 */6 * * *", func=sync_firmwares, start=False, tz="UTC")
+    aiocron.crontab("0 0 1 * *", func=DeviceScraper.sync_devices, start=False, tz="UTC")
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:
@@ -63,4 +64,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        log.info("Sam Helper Bot stopped!")
+        log.info("Samsung Helper Bot stopped!")
