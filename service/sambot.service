@@ -1,0 +1,15 @@
+[Unit]
+Description=Samsung Helper Telegram Bot
+After=network.target
+
+[Service]
+User=hitalo
+Group=wheel
+type=simple
+WorkingDirectory=/home/hitalo/Samsung-Helper
+ExecStart=/usr/bin/rye run python -m sambot
+EnvironmentFile=/home/hitalo/Samsung-Helper/data/config.env
+restart=always
+
+[Install]
+WantedBy=multi-user.target
