@@ -72,7 +72,7 @@ async def sync_firmwares() -> None:
                             chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
                         )
                     except TelegramRetryAfter as e:
-                        log.error(
+                        log.warn(
                             "[FirmwaresSync] - Telegram Retry-After: %s seconds", e.retry_after
                         )
                         await asyncio.sleep(e.retry_after)
