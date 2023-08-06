@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
+import asyncio
+
+from aiogram.exceptions import TelegramRetryAfter
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from sambot import bot
@@ -63,8 +66,18 @@ async def sync_firmwares() -> None:
                         f"<b>Changelog:</b>\n{info.changelog}"
                     )
 
-                    await bot.send_message(
-                        chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
-                    )
+                    await asyncio.sleep(0.5)
+                    try:
+                        await bot.send_message(
+                            chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
+                        )
+                    except TelegramRetryAfter as e:
+                        log.error(
+                            "[FirmwaresSync] - Telegram Retry-After: %s seconds", e.retry_after
+                        )
+                        await asyncio.sleep(e.retry_after)
+                        await bot.send_message(
+                            chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
+                        )
 
                 await firmwares_db.set_pda(model, info.pda)
