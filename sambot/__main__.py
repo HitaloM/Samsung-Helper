@@ -14,7 +14,7 @@ from aiosqlite import __version__ as aiosqlite_version
 from sambot import __version__ as sambot_version
 from sambot import bot, config, dp, i18n
 from sambot.database import create_tables
-from sambot.handlers import pm_menu
+from sambot.handlers import doas, pm_menu
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
 from sambot.utils.devices import DeviceScraper
@@ -38,7 +38,7 @@ async def main():
     dp.callback_query.middleware(ACLMiddleware())
     dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
 
-    dp.include_routers(pm_menu.router)
+    dp.include_routers(pm_menu.router, doas.router)
 
     aiocron.crontab("0 */6 * * *", func=sync_firmwares, tz=datetime.UTC)
     aiocron.crontab("0 0 1 * *", func=DeviceScraper.sync_devices, tz=datetime.UTC)
