@@ -2,6 +2,7 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
+import datetime
 from contextlib import suppress
 
 import aiocron
@@ -39,8 +40,8 @@ async def main():
 
     dp.include_routers(pm_menu.router)
 
-    aiocron.crontab("0 */6 * * *", func=sync_firmwares, start=False, tz="UTC")
-    aiocron.crontab("0 0 1 * *", func=DeviceScraper.sync_devices, start=False, tz="UTC")
+    aiocron.crontab("0 */6 * * *", func=sync_firmwares, tz=datetime.UTC)
+    aiocron.crontab("0 0 1 * *", func=DeviceScraper.sync_devices, tz=datetime.UTC)
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:

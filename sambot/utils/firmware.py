@@ -171,7 +171,6 @@ class SamsungFirmwareInfo:
                 if len(changelog_entries) >= 2:
                     latest_entry = changelog_entries[1]
                     info = latest_entry.find_all(class_="col-md-3")
-                    print(info)
 
                     if len(info) >= 4:
                         pda = info[0].text.split(":")[1].strip()
@@ -200,8 +199,8 @@ class SamsungFirmwareInfo:
                             name=name,
                             changelog=changelog_txt,
                         )
-        except BaseException as e:
-            log.error("[SamsungFirmwareInfo] Failed to fetch latest firmware info %s", e)
+        except BaseException:
+            log.error("[SamsungFirmwareInfo] Failed to fetch latest firmware info", exc_info=True)
             return None
 
 
