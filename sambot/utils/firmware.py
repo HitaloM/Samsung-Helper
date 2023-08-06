@@ -56,7 +56,7 @@ class SamsungFirmwareInfo:
             Returns:
                 str: The major version of the Android operating system.
             """
-            return pda[-4]
+            return str(pda[-4])
 
         @staticmethod
         def get_build_year(pda: str) -> str:
@@ -69,7 +69,7 @@ class SamsungFirmwareInfo:
             Returns:
                 str: The build date of the firmware version.
             """
-            return pda[-3]
+            return str(pda[-3])
 
         @staticmethod
         def get_build_month(pda: str) -> str:
@@ -82,7 +82,7 @@ class SamsungFirmwareInfo:
             Returns:
                 str: The build date of the firmware version.
             """
-            return pda[-2]
+            return str(pda[-2])
 
         @staticmethod
         def get_build_id(pda: str) -> str:
@@ -94,9 +94,9 @@ class SamsungFirmwareInfo:
                 pda (str): The PDA string representing the firmware version.
 
             Returns:
-                int: The minor version of the Android operating system.
+                str: The minor version of the Android operating system.
             """
-            return pda[-1]
+            return str(pda[-1])
 
         def is_newer_than(self, old_pda) -> bool:
             """

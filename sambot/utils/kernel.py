@@ -43,7 +43,7 @@ class SamsungKernelInfo:
             self.patch_kernel = patch_kernel
 
         @staticmethod
-        def get_major_version(pda: str) -> int:
+        def get_major_version(pda: str) -> str:
             """
             Returns the major version number of the given PDA version.
 
@@ -51,12 +51,12 @@ class SamsungKernelInfo:
                 pda (str): The PDA version to extract the major version number from.
 
             Returns:
-                int: The major version number of the given PDA version.
+                str: The major version number of the given PDA version.
             """
-            return int(pda[-4])
+            return str(pda[-4])
 
         @staticmethod
-        def get_build_date1(pda: str) -> int:
+        def get_build_date1(pda: str) -> str:
             """
             Returns the build date 1 of the given PDA version.
 
@@ -64,12 +64,12 @@ class SamsungKernelInfo:
                 pda (str): The PDA version to extract the build date 1 from.
 
             Returns:
-                int: The build date 1 of the given PDA version.
+                str: The build date 1 of the given PDA version.
             """
-            return int(pda[-3])
+            return str(pda[-3])
 
         @staticmethod
-        def get_build_date2(pda: str) -> int:
+        def get_build_date2(pda: str) -> str:
             """
             Returns the build date 2 of the given PDA version.
 
@@ -77,12 +77,12 @@ class SamsungKernelInfo:
                 pda (str): The PDA version to extract the build date 2 from.
 
             Returns:
-                int: The build date 2 of the given PDA version.
+                str: The build date 2 of the given PDA version.
             """
-            return int(pda[-2])
+            return str(pda[-2])
 
         @staticmethod
-        def get_minor_version(pda: str) -> int:
+        def get_minor_version(pda: str) -> str:
             """
             Returns the minor version number of the given PDA version.
 
@@ -90,9 +90,9 @@ class SamsungKernelInfo:
                 pda (str): The PDA version to extract the minor version number from.
 
             Returns:
-                int: The minor version number of the given PDA version.
+                str: The minor version number of the given PDA version.
             """
-            return int(pda[-1])
+            return str(pda[-1])
 
         def is_newer_than(self, old_pda: str) -> bool:
             """
