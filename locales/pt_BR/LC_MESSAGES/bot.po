@@ -55,4 +55,3 @@ msgstr "🌐 Idioma"
 #: sambot/handlers/pm_menu.py:28
 msgid "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy smartphone users. You can have a look at my features in the help menu by clicking the button below."
 msgstr "Olá <b>{user_name}</b>! Sou um bot feito para ajudar usuários de smartphone Samsung Galaxy. Você pode dar uma olhada nos meus recursos no menu de ajuda clicando no botão abaixo."
-
