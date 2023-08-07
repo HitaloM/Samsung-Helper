@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-08-07 12:35-0300\n"
-"PO-Revision-Date: 2023-08-07 15:58\n"
+"PO-Revision-Date: 2023-08-07 16:04\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -21,34 +21,38 @@ msgstr ""
 #: sambot/handlers/language.py:32
 msgid "You can select your preferred language for the bot in this chat by clicking on one of the buttons below. These are the languages that the bot currently supports.\n"
 "If you are interested in contributing to the translations with your language, please contact @Hitalo.\n"
-msgstr ""
+msgstr "Você pode selecionar seu idioma preferido para o bot neste chat clicando em um dos botões abaixo. Esses são os idiomas que o bot suporta atualmente.\n"
+"Se estiver interessado em contribuir para as traduções em seu idioma, entre em contato com @Hitalo.\n"
 
 #: sambot/handlers/language.py:40
 msgid "\n"
 "Your current language: {lang}"
-msgstr ""
+msgstr "\n"
+"Seu idioma atual: {lang}"
 
 #: sambot/handlers/language.py:42
 msgid "\n"
 "Group current language: {lang}"
-msgstr ""
+msgstr "\n"
+"Idioma atual do grupo: {lang}"
 
 #: sambot/handlers/language.py:58
 msgid "🌎 Contribute in translations!"
-msgstr ""
+msgstr "🌎 Contribua nas traduções!"
 
 #: sambot/handlers/language.py:65
 msgid "🔙 Back"
-msgstr ""
+msgstr "🔙 Voltar"
 
 #: sambot/handlers/language.py:87
 msgid "Changed language to {lang}"
-msgstr ""
+msgstr "Idioma alterado para {lang}"
 
 #: sambot/handlers/pm_menu.py:26
 msgid "🌐 Language"
-msgstr ""
+msgstr "🌐 Idioma"
 
 #: sambot/handlers/pm_menu.py:28
 msgid "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy smartphone users. You can have a look at my features in the help menu by clicking the button below."
-msgstr ""
+msgstr "Olá <b>{user_name}</b>! Sou um bot feito para ajudar usuários de smartphone Samsung Galaxy. Você pode dar uma olhada nos meus recursos no menu de ajuda clicando no botão abaixo."
+
