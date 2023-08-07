@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from sambot import FWSession
 from sambot.utils.logging import log
+from sambot.utils.pda import get_build_id, get_build_month, get_build_year, get_major_version
 
 
 class SamsungFirmwareInfo:
@@ -45,60 +46,6 @@ class SamsungFirmwareInfo:
             """
             return f"https://samfw.com/firmware/{self.model}/{self.region}/{self.pda}"
 
-        @staticmethod
-        def get_major_version(pda: str) -> str:
-            """
-            Returns the major version of the Android operating system represented by the given
-            PDA string.
-
-            Args:
-                pda (str): The PDA string representing the firmware version.
-
-            Returns:
-                str: The major version of the Android operating system.
-            """
-            return str(pda[-4])
-
-        @staticmethod
-        def get_build_year(pda: str) -> str:
-            """
-            Returns the build date of the firmware version represented by the given PDA string.
-
-            Args:
-                pda (str): The PDA string representing the firmware version.
-
-            Returns:
-                str: The build date of the firmware version.
-            """
-            return str(pda[-3])
-
-        @staticmethod
-        def get_build_month(pda: str) -> str:
-            """
-            Returns the build date of the firmware version represented by the given PDA string.
-
-            Args:
-                pda (str): The PDA string representing the firmware version.
-
-            Returns:
-                str: The build date of the firmware version.
-            """
-            return str(pda[-2])
-
-        @staticmethod
-        def get_build_id(pda: str) -> str:
-            """
-            Returns the minor version of the Android operating system represented by the given PDA
-            string.
-
-            Args:
-                pda (str): The PDA string representing the firmware version.
-
-            Returns:
-                str: The minor version of the Android operating system.
-            """
-            return str(pda[-1])
-
         def is_newer_than(self, old_pda) -> bool:
             """
             Determines if the firmware version represented by this FirmwareInfo object is newer
@@ -117,19 +64,19 @@ class SamsungFirmwareInfo:
             if len(self.pda) < 4:
                 return False
 
-            if self.get_major_version(self.pda) > self.get_major_version(old_pda):
+            if get_major_version(self.pda) > get_major_version(old_pda):
                 return True
 
-            if self.get_major_version(self.pda) == self.get_major_version(old_pda):
-                if self.get_build_year(self.pda) > self.get_build_year(old_pda):
+            if get_major_version(self.pda) == get_major_version(old_pda):
+                if get_build_year(self.pda) > get_build_year(old_pda):
                     return True
 
-                if self.get_build_year(self.pda) == self.get_build_year(old_pda):
-                    if self.get_build_month(self.pda) > self.get_build_month(old_pda):
+                if get_build_year(self.pda) == get_build_year(old_pda):
+                    if get_build_month(self.pda) > get_build_month(old_pda):
                         return True
 
-                    if self.get_build_month(self.pda) == self.get_build_month(old_pda):
-                        return self.get_build_id(self.pda) > self.get_build_id(old_pda)
+                    if get_build_month(self.pda) == get_build_month(old_pda):
+                        return get_build_id(self.pda) > get_build_id(old_pda)
 
             return False
 

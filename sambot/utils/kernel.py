@@ -12,6 +12,7 @@ from yarl import URL
 
 from sambot import KernelSession, app_dir
 from sambot.utils.logging import log
+from sambot.utils.pda import get_build_id, get_build_month, get_build_year, get_major_version
 
 OSS_BASE_URL: str = "https://opensource.samsung.com"
 OSS_SEARCH_URL: str = OSS_BASE_URL + "/uploadSearch?searchValue="
@@ -42,67 +43,17 @@ class SamsungKernelInfo:
             self.upload_id = upload_id
             self.patch_kernel = patch_kernel
 
-        @staticmethod
-        def get_major_version(pda: str) -> str:
+        def is_newer_than(self, old_pda) -> bool:
             """
-            Returns the major version number of the given PDA version.
+            Determines if the firmware version represented by this FirmwareInfo object is newer
+            than the firmware version represented by the given PDA string.
 
             Args:
-                pda (str): The PDA version to extract the major version number from.
+                old_pda (str): The PDA string representing the old firmware version.
 
             Returns:
-                str: The major version number of the given PDA version.
-            """
-            return str(pda[-4])
-
-        @staticmethod
-        def get_build_date1(pda: str) -> str:
-            """
-            Returns the build date 1 of the given PDA version.
-
-            Args:
-                pda (str): The PDA version to extract the build date 1 from.
-
-            Returns:
-                str: The build date 1 of the given PDA version.
-            """
-            return str(pda[-3])
-
-        @staticmethod
-        def get_build_date2(pda: str) -> str:
-            """
-            Returns the build date 2 of the given PDA version.
-
-            Args:
-                pda (str): The PDA version to extract the build date 2 from.
-
-            Returns:
-                str: The build date 2 of the given PDA version.
-            """
-            return str(pda[-2])
-
-        @staticmethod
-        def get_minor_version(pda: str) -> str:
-            """
-            Returns the minor version number of the given PDA version.
-
-            Args:
-                pda (str): The PDA version to extract the minor version number from.
-
-            Returns:
-                str: The minor version number of the given PDA version.
-            """
-            return str(pda[-1])
-
-        def is_newer_than(self, old_pda: str) -> bool:
-            """
-            Determines whether the current kernel is newer than the given PDA version.
-
-            Args:
-                old_pda (str): The PDA version to compare against.
-
-            Returns:
-                bool: True if the current kernel is newer, False otherwise.
+                bool: True if the firmware version represented by this FirmwareInfo object is newer
+                than the firmware version represented by the given PDA string, False otherwise.
             """
             if len(old_pda) < 4:
                 return True
@@ -110,19 +61,19 @@ class SamsungKernelInfo:
             if len(self.pda) < 4:
                 return False
 
-            if self.get_major_version(self.pda) > self.get_major_version(old_pda):
+            if get_major_version(self.pda) > get_major_version(old_pda):
                 return True
 
-            if self.get_major_version(self.pda) == self.get_major_version(old_pda):
-                if self.get_build_date1(self.pda) > self.get_build_date1(old_pda):
+            if get_major_version(self.pda) == get_major_version(old_pda):
+                if get_build_year(self.pda) > get_build_year(old_pda):
                     return True
 
-                if self.get_build_date1(self.pda) == self.get_build_date1(old_pda):
-                    if self.get_build_date2(self.pda) > self.get_build_date2(old_pda):
+                if get_build_year(self.pda) == get_build_year(old_pda):
+                    if get_build_month(self.pda) > get_build_month(old_pda):
                         return True
 
-                    if self.get_build_date2(self.pda) == self.get_build_date2(old_pda):
-                        return self.get_minor_version(self.pda) > self.get_minor_version(old_pda)
+                    if get_build_month(self.pda) == get_build_month(old_pda):
+                        return get_build_id(self.pda) > get_build_id(old_pda)
 
             return False
 
