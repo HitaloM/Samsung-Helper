@@ -2,6 +2,7 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import re
+from asyncio import CancelledError
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -251,6 +252,8 @@ class SamsungKernelInfo:
                         return self.KernelMeta(
                             model=model, pda=fw_version, upload_id=upload_id, patch_kernel=None
                         )
+        except (KeyboardInterrupt, CancelledError):
+            raise
         except BaseException:
             log.error("[SamsungKernelInfo] - Failed to fetch latest kernel for model %s", model)
             return None

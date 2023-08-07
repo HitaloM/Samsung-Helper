@@ -26,8 +26,8 @@ async def start_command(union: Message | CallbackQuery):
     keyboard.button(text=_("🌐 Language"), callback_data=StartCallback(menu="language"))
 
     text = _(
-        "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy smartphone users. You \
-can have a look at my features in the help menu by clicking the button below."
+        "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. \
+You can have a look at my features in the help menu by clicking the button below."
     ).format(user_name=html.escape(union.from_user.full_name))
 
     await (message.edit_text if is_callback else message.reply)(
