@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
+from asyncio import CancelledError
 from datetime import date, datetime
 
 from bs4 import BeautifulSoup
@@ -184,10 +185,13 @@ class SamsungFirmwareInfo:
                         if len(h1) > 0:
                             name = h1[0].text.split("(")[0].strip()
 
+                        for br in soup.find_all("br"):
+                            br.replace_with("\n")
+
                         changelog_text = soup.find_all("span")
 
                         if len(changelog_text) > 1:
-                            changelog_txt = changelog_text[1].text.replace("<br>", "\n")
+                            changelog_txt = changelog_text[1].get_text()
 
                         return self.FirmwareMeta(
                             model=model,
@@ -199,9 +203,10 @@ class SamsungFirmwareInfo:
                             name=name,
                             changelog=changelog_txt,
                         )
+        except (KeyboardInterrupt, CancelledError):
+            raise
         except BaseException:
             log.error("[SamsungFirmwareInfo] Failed to fetch latest firmware info", exc_info=True)
-            return None
 
 
 FirmwareInfo = SamsungFirmwareInfo()
