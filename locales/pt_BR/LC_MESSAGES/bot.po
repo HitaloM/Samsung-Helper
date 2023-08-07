@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-07-12 20:15-0300\n"
+"POT-Creation-Date: 2023-08-07 12:35-0300\n"
 "PO-Revision-Date: 2023-07-12 20:14-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -18,6 +18,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: sambot/handlers/pm_menu.py:14
-msgid "Hello World"
+#: sambot/handlers/language.py:32
+msgid ""
+"You can select your preferred language for the bot in this chat by "
+"clicking on one of the buttons below. These are the languages that the "
+"bot currently supports.\n"
+"If you are interested in contributing to the translations with your "
+"language, please contact @Hitalo.\n"
 msgstr ""
+
+#: sambot/handlers/language.py:40
+msgid ""
+"\n"
+"Your current language: {lang}"
+msgstr ""
+
+#: sambot/handlers/language.py:42
+msgid ""
+"\n"
+"Group current language: {lang}"
+msgstr ""
+
+#: sambot/handlers/language.py:58
+msgid "🌎 Contribute in translations!"
+msgstr ""
+
+#: sambot/handlers/language.py:65
+msgid "🔙 Back"
+msgstr ""
+
+#: sambot/handlers/language.py:87
+msgid "Changed language to {lang}"
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:26
+msgid "🌐 Language"
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:28
+msgid ""
+"Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy "
+"smartphone users. You can have a look at my features in the help menu by "
+"clicking the button below."
+msgstr ""
+
+#~ msgid "Hello World"
+#~ msgstr ""

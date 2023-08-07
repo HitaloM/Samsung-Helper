@@ -4,5 +4,10 @@
 from aiogram.filters.callback_data import CallbackData
 
 
+class LanguageCallback(CallbackData, prefix="setlang"):
+    lang: str
+    chat: str
+
+
 class StartCallback(CallbackData, prefix="start"):
     menu: str
