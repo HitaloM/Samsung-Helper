@@ -1,41 +1,35 @@
-# Portuguese (Brazil) translations for PROJECT.
-# Copyright (C) 2023 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-08-07 12:35-0300\n"
-"PO-Revision-Date: 2023-07-12 20:14-0300\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: pt_BR\n"
-"Language-Team: pt_BR <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"PO-Revision-Date: 2023-08-07 15:58\n"
+"Last-Translator: \n"
+"Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: sambot\n"
+"X-Crowdin-Project-ID: 606423\n"
+"X-Crowdin-Language: pt-BR\n"
+"X-Crowdin-File: /main/locales/bot.pot\n"
+"X-Crowdin-File-ID: 55\n"
+"Language: pt_BR\n"
 
 #: sambot/handlers/language.py:32
-msgid ""
-"You can select your preferred language for the bot in this chat by "
-"clicking on one of the buttons below. These are the languages that the "
-"bot currently supports.\n"
-"If you are interested in contributing to the translations with your "
-"language, please contact @Hitalo.\n"
+msgid "You can select your preferred language for the bot in this chat by clicking on one of the buttons below. These are the languages that the bot currently supports.\n"
+"If you are interested in contributing to the translations with your language, please contact @Hitalo.\n"
 msgstr ""
 
 #: sambot/handlers/language.py:40
-msgid ""
-"\n"
+msgid "\n"
 "Your current language: {lang}"
 msgstr ""
 
 #: sambot/handlers/language.py:42
-msgid ""
-"\n"
+msgid "\n"
 "Group current language: {lang}"
 msgstr ""
 
@@ -56,11 +50,6 @@ msgid "🌐 Language"
 msgstr ""
 
 #: sambot/handlers/pm_menu.py:28
-msgid ""
-"Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy "
-"smartphone users. You can have a look at my features in the help menu by "
-"clicking the button below."
+msgid "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy smartphone users. You can have a look at my features in the help menu by clicking the button below."
 msgstr ""
 
-#~ msgid "Hello World"
-#~ msgstr ""
