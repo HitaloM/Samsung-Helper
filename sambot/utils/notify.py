@@ -49,7 +49,7 @@ async def sync_firmwares() -> None:
                     )
 
                 pda = await firmwares_db.get_pda(model)
-                if pda and info.is_newer_than(pda):
+                if pda and info.is_newer_than(str(pda)):
                     keyboard = InlineKeyboardBuilder()
                     keyboard.button(text="Download ⬇️", url=info.download_url())
 
@@ -80,4 +80,4 @@ async def sync_firmwares() -> None:
                             chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
                         )
 
-                await firmwares_db.set_pda(model, info.pda)
+                    await firmwares_db.set_pda(model, info.pda)
