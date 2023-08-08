@@ -28,7 +28,9 @@ async def start_command(union: Message | CallbackQuery):
 
     text = _(
         "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. \
-You can have a look at my features in the help menu by clicking the button below."
+You can have a look at my features in the help menu by clicking the button below.\n\n\
+To checkout my commands just type in the <code>/</code> (bar) in the group and select \
+a command or in the <i>menu</i> button."
     ).format(user_name=html.escape(union.from_user.full_name))
 
     await (message.edit_text if is_callback else message.reply)(
