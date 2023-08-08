@@ -87,7 +87,7 @@ async def process_firmware(model: str):
                     finally:
                         await channel_log(
                             text=(
-                                "<b>New firmware detected for"
+                                "<b>New firmware detected for "
                                 f"{info.name}</b> (<code>{info.model}</code>)"
                             )
                         )
@@ -121,7 +121,7 @@ async def sync_firmwares():
         await fw_queue.put(model)
 
     async def task():
-        while True:
+        while not fw_queue.empty():
             try:
                 model = await asyncio.wait_for(fw_queue.get(), timeout=60)
             except asyncio.TimeoutError:
@@ -130,9 +130,9 @@ async def sync_firmwares():
                 log.info("[FirmwaresSync] - Checking model: %s", model)
                 await process_firmware(model)
 
-    tasks = [asyncio.create_task(task()) for _ in range(5)]
-
-    await asyncio.gather(*tasks)
+    while not fw_queue.empty():
+        tasks = [asyncio.create_task(task()) for _ in range(10)]
+        await asyncio.gather(*tasks)
 
     await channel_log(
         text=(
