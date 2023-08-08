@@ -41,7 +41,7 @@ async def main():
     dp.include_routers(pm_menu.router, doas.router, language.router)
 
     aiocron.crontab(
-        "0 */12 * * *",
+        "0 */6 * * *",
         func=sync_firmwares,
         loop=asyncio.get_event_loop(),
         tz=datetime.UTC,
