@@ -97,6 +97,13 @@ async def process_firmware(model: str):
 
 async def sync_firmwares():
     log.info("[FirmwaresSync] - Starting firmware sync...")
+    if not fw_queue.empty():
+        log.warn("[FirmwaresSync] - Queue is not empty, aborting sync!")
+        await channel_log(
+            text="<b>Alert!</b> Firmware sync aborted because the queue is not empty!"
+        )
+        return
+
     await channel_log(
         text=(
             "<b>Starting firmwares sync...</b>\n\n"
@@ -109,25 +116,23 @@ async def sync_firmwares():
         log.warn("[FirmwaresSync] - No models found in database!")
         return
 
-    if fw_queue.empty():
-        for model in all_models:
-            log.debug("[FirmwaresSync] - Adding model to the queue: %s", model)
-            await fw_queue.put(model)
+    for model in all_models:
+        log.debug("[FirmwaresSync] - Adding model to the queue: %s", model)
+        await fw_queue.put(model)
 
-        async def task():
-            while True:
-                try:
-                    model = await asyncio.wait_for(fw_queue.get(), timeout=60)
-                except asyncio.TimeoutError:
-                    log.error("[FirmwaresSync] - TimeoutError")
-                    break
-                else:
-                    log.info("[FirmwaresSync] - Checking model: %s", model)
-                    await process_firmware(model)
+    async def task():
+        while True:
+            try:
+                model = await asyncio.wait_for(fw_queue.get(), timeout=60)
+            except asyncio.TimeoutError:
+                break
+            else:
+                log.info("[FirmwaresSync] - Checking model: %s", model)
+                await process_firmware(model)
 
-        tasks = [asyncio.create_task(task()) for _ in range(5)]
+    tasks = [asyncio.create_task(task()) for _ in range(5)]
 
-        await asyncio.gather(*tasks)
+    await asyncio.gather(*tasks)
 
     await channel_log(
         text=(
