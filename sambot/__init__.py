@@ -39,6 +39,10 @@ RegionsSession = RegionsClient()
 FWSession = FWClient()
 KernelSession = KernelClient()
 
-bot = Bot(token=config.bot_token.get_secret_value(), parse_mode=ParseMode.HTML)
+bot = Bot(
+    token=config.bot_token.get_secret_value(),
+    parse_mode=ParseMode.HTML,
+    disable_web_page_preview=True,
+)
 dp = Dispatcher()
 i18n = I18n(path=locales_dir, default_locale="en", domain="bot")
