@@ -5,6 +5,8 @@ import logging
 
 from loguru import logger
 
+from sambot import bot, config
+
 
 class InterceptHandler(logging.Handler):
     LEVELS_MAP = {
@@ -36,3 +38,8 @@ class InterceptHandler(logging.Handler):
 
 logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 log = logging.getLogger(__name__)
+
+
+async def channel_log(text: str, **kwargs):
+    if config.logs_channel:
+        await bot.send_message(config.logs_channel, text=text, **kwargs)

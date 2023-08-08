@@ -11,7 +11,7 @@ from sambot import bot
 from sambot.config import config
 from sambot.database import Firmwares, devices_db
 from sambot.utils.firmware import FirmwareInfo
-from sambot.utils.logging import log
+from sambot.utils.logging import channel_log, log
 
 
 async def sync_firmwares() -> None:
@@ -20,12 +20,12 @@ async def sync_firmwares() -> None:
         return
 
     log.info("[FirmwaresSync] - Starting firmware sync...")
-    if config.logs_channel:
-        text = (
+    await channel_log(
+        text=(
             "<b>Starting firmwares sync...</b>\n\n"
             f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}</code>\n"
         )
-        await bot.send_message(config.logs_channel, text=text)
+    )
 
     firmwares_db = Firmwares()
 
@@ -88,12 +88,19 @@ async def sync_firmwares() -> None:
                         await bot.send_message(
                             chat_id=config.fw_channel, text=text, reply_markup=keyboard.as_markup()
                         )
+                    finally:
+                        await channel_log(
+                            text=(
+                                "<b>New firmware detected for"
+                                f"{info.name}</b> (<code>{info.model}</code>)"
+                            )
+                        )
 
                     await firmwares_db.set_pda(model, info.pda)
 
-    if config.logs_channel:
-        text = (
+    await channel_log(
+        text=(
             "<b>Firmwares sync finished!</b>\n\n"
             f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}</code>\n"
         )
-        await bot.send_message(config.logs_channel, text=text)
+    )
