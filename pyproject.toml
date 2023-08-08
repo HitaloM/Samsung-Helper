@@ -22,6 +22,7 @@ dependencies = [
     "lxml>=4.9.3",
     "aiofile>=3.8.7",
     "aiocron>=1.8",
+    "uvloop>=0.17.0",
 ]
 
 [build-system]

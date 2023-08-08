@@ -4,7 +4,8 @@
 import html
 
 from aiogram import F, Router
-from aiogram.filters import Command
+from aiogram.enums import ChatType
+from aiogram.filters import CommandStart
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -14,7 +15,7 @@ from sambot.utils.callback_data import StartCallback
 router = Router(name="pm_menu")
 
 
-@router.message(Command("start"))
+@router.message(CommandStart(), F.chat.type == ChatType.PRIVATE)
 @router.callback_query(StartCallback.filter(F.menu == "start"))
 async def start_command(union: Message | CallbackQuery):
     is_callback = isinstance(union, CallbackQuery)

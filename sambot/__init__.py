@@ -5,6 +5,7 @@ import asyncio
 from contextlib import suppress
 from pathlib import Path
 
+import uvloop
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.utils.i18n import I18n
@@ -16,6 +17,8 @@ from sambot.utils.aiohttp.firmware import FWClient
 from sambot.utils.aiohttp.kernel import KernelClient
 from sambot.utils.logging import log
 from sambot.utils.systools import ShellException, shell_run
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 commit_count = "None"
 commit_hash = "None"

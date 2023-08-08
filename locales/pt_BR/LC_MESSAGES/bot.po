@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-07 14:07-0300\n"
+"POT-Creation-Date: 2023-08-08 00:41-0300\n"
 "PO-Revision-Date: 2023-07-12 20:14-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -56,11 +56,11 @@ msgstr "🔙 Voltar"
 msgid "Changed language to {lang}"
 msgstr "Idioma alterado para {lang}"
 
-#: sambot/handlers/pm_menu.py:26
+#: sambot/handlers/pm_menu.py:27
 msgid "🌐 Language"
 msgstr "🌐 Idioma"
 
-#: sambot/handlers/pm_menu.py:28
+#: sambot/handlers/pm_menu.py:29
 msgid ""
 "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. "
 "You can have a look at my features in the help menu by clicking the "
