@@ -2,6 +2,7 @@
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
+from datetime import datetime
 
 from aiogram.exceptions import TelegramRetryAfter
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -17,6 +18,14 @@ async def sync_firmwares() -> None:
     if not config.fw_channel:
         log.error("[FirmwaresSync] - Firmware channel not set!")
         return
+
+    log.info("[FirmwaresSync] - Starting firmware sync...")
+    if config.logs_channel:
+        text = (
+            "<b>Starting firmwares sync...</b>\n\n"
+            f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}</code>\n"
+        )
+        await bot.send_message(config.logs_channel, text=text)
 
     firmwares_db = Firmwares()
 
@@ -81,3 +90,10 @@ async def sync_firmwares() -> None:
                         )
 
                     await firmwares_db.set_pda(model, info.pda)
+
+    if config.logs_channel:
+        text = (
+            "<b>Firmwares sync finished!</b>\n\n"
+            f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}</code>\n"
+        )
+        await bot.send_message(config.logs_channel, text=text)
