@@ -51,10 +51,7 @@ async def sync_firmwares() -> None:
                 pda = await firmwares_db.get_pda(model)
                 if pda and info.is_newer_than(str(pda)):
                     keyboard = InlineKeyboardBuilder()
-                    keyboard.button(text="Channel", url="https://t.me/SamFirm")
-                    keyboard.button(text="Group", url="https://t.me/SamFirm_chat")
-                    keyboard.button(text="⬇️ Download", url=info.download_url())
-                    keyboard.adjust(2)
+                    keyboard.button(text="Download ⬇️", url=info.download_url())
 
                     build_date = info.build_date.strftime("%Y-%m-%d")
                     securitypatch = info.securitypatch.strftime("%Y-%m-%d")
