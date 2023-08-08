@@ -17,6 +17,7 @@ from sambot.database import create_tables
 from sambot.handlers import doas, language, pm_menu, tools
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
+from sambot.utils.command_list import set_ui_commands
 from sambot.utils.devices import DeviceScraper
 from sambot.utils.logging import log
 from sambot.utils.notify import sync_firmwares
@@ -39,6 +40,8 @@ async def main():
     dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
 
     dp.include_routers(pm_menu.router, doas.router, language.router, tools.router)
+
+    await set_ui_commands(bot, i18n)
 
     aiocron.crontab(
         "0 */6 * * *",

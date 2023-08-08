@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-08 17:17-0300\n"
+"POT-Creation-Date: 2023-08-08 17:28-0300\n"
 "PO-Revision-Date: 2023-07-12 20:14-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "🌎 Contribute in translations!"
 msgstr "🌎 Contribua nas traduções!"
 
-#: sambot/handlers/language.py:65
+#: sambot/handlers/language.py:65 sambot/handlers/pm_menu.py:63
 msgid "🔙 Back"
 msgstr "🔙 Voltar"
 
@@ -57,21 +57,58 @@ msgid "Changed language to {lang}"
 msgstr "Idioma alterado para {lang}"
 
 #: sambot/handlers/pm_menu.py:27
+msgid "ℹ️ About"
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:28
 msgid "🌐 Language"
 msgstr "🌐 Idioma"
 
 #: sambot/handlers/pm_menu.py:29
+msgid "Samsung Firmwares Updater"
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:32
 msgid ""
 "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. "
 "You can have a look at my features in the help menu by clicking the "
 "button below.\n"
 "\n"
-"To checkout my commands just type in the <code>/</code> (bar) in the "
-"group and select a command or in the <i>menu</i> button."
+"To checkout my commands just type in the <code>/</code> (bar) icon in the"
+" group and select a command or in the <i>menu</i> button in PM."
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:53
+msgid "This bot is made to help Samsung Galaxy users."
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:56
+msgid "📦 GitHub"
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:57
+msgid "📚 Channel"
 msgstr ""
 
 #: sambot/handlers/tools.py:23
 msgid "<b>Below are some useful tools for Samsung Galaxy devices</b>:"
+msgstr ""
+
+#: sambot/utils/command_list.py:25
+msgid "Get latest tools for Samsung Galaxy"
+msgstr ""
+
+#: sambot/utils/command_list.py:29
+#, fuzzy
+msgid "Change bot language."
+msgstr "Idioma alterado para {lang}"
+
+#: sambot/utils/command_list.py:33
+msgid "About the bot."
+msgstr ""
+
+#: sambot/utils/command_list.py:40
+msgid "Start the bot."
 msgstr ""
 
 #~ msgid "Hello World"
@@ -91,4 +128,17 @@ msgstr ""
 #~ " can have a look at my features"
 #~ " in the help menu by clicking "
 #~ "the button below."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Hello <b>{user_name}</b>! I'm a bot made"
+#~ " to help Samsung Galaxy users. You"
+#~ " can have a look at my features"
+#~ " in the help menu by clicking "
+#~ "the button below.\n"
+#~ "\n"
+#~ "To checkout my commands just type "
+#~ "in the <code>/</code> (bar) in the "
+#~ "group and select a command or in"
+#~ " the <i>menu</i> button."
 #~ msgstr ""
