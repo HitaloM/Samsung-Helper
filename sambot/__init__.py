@@ -16,13 +16,13 @@ from sambot.utils.aiohttp.devices import RegionsClient
 from sambot.utils.aiohttp.firmware import FWClient
 from sambot.utils.aiohttp.kernel import KernelClient
 from sambot.utils.logging import log
-from sambot.utils.systools import ShellException, shell_run
+from sambot.utils.systools import ShellExceptionError, shell_run
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 commit_count = "None"
 commit_hash = "None"
-with suppress(ShellException):
+with suppress(ShellExceptionError):
     commit_count = asyncio.run(shell_run("git rev-list --count HEAD"))
     commit_hash = asyncio.run(shell_run("git rev-parse --short HEAD"))
 

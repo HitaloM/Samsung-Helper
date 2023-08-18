@@ -4,7 +4,7 @@
 import asyncio
 from datetime import datetime
 
-from aiogram.exceptions import TelegramRetryAfter
+from aiogram.exceptions import TelegramBadRequest, TelegramRetryAfter
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from sambot import bot
@@ -76,7 +76,8 @@ async def process_firmware(model: str):
                         )
                     except TelegramRetryAfter as e:
                         log.warn(
-                            "[FirmwaresSync] - Telegram Retry-After: %s seconds", e.retry_after
+                            "[FirmwaresSync] - Telegram Retry-After: %s seconds",
+                            e.retry_after,
                         )
                         await asyncio.sleep(e.retry_after)
                         await bot.send_message(
@@ -84,6 +85,25 @@ async def process_firmware(model: str):
                             text=text,
                             reply_markup=keyboard.as_markup(),
                         )
+                    except TelegramBadRequest as e:
+                        if "message is too long" in str(e):
+                            await bot.send_message(
+                                chat_id=config.fw_channel,
+                                text=text[:4090] + "[...]",
+                                reply_markup=keyboard.as_markup(),
+                            )
+                        else:
+                            log.error(
+                                "[FirmwaresSync] - Telegram Bad Request: %s",
+                                e.message,
+                                exc_info=True,
+                            )
+                            await channel_log(
+                                text=(
+                                    "<b>Alert!</b> Firmware sync have an error!\n"
+                                    "<b>Error:</b> <code>{e.message}</code>"
+                                )
+                            )
                     finally:
                         await channel_log(
                             text=(

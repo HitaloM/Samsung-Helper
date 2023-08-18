@@ -35,15 +35,13 @@ async def set_ui_commands(bot: Bot, i18n: I18n):
             ]
 
             user_commands: list[BotCommand] = [
-                BotCommand(
-                    command="start",
-                    description=_("Start the bot.", locale=lang),
-                ),
-            ] + all_chats_commands
+                BotCommand(command="start", description=_("Start the bot.", locale=lang)),
+                *all_chats_commands,
+            ]
 
-            group_commands: list[BotCommand] = (
-                [] + all_chats_commands
-            )  # temporary until I add more commands
+            group_commands: list[BotCommand] = [
+                *all_chats_commands
+            ]  # temporary until I add more commands
 
             await bot.set_my_commands(
                 commands=user_commands,

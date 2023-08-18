@@ -22,7 +22,7 @@ from sambot import i18n
 from sambot.database import chats_db, users_db
 from sambot.filters.user_status import IsSudo
 from sambot.utils.callback_data import StartCallback
-from sambot.utils.systools import ShellException, parse_commits, shell_run
+from sambot.utils.systools import ShellExceptionError, parse_commits, shell_run
 
 router = Router(name="doas")
 
@@ -82,7 +82,7 @@ async def bot_update(message: Message):
         if not stdout:
             await sent.edit_text("There is nothing to update.")
             return
-    except ShellException as error:
+    except ShellExceptionError as error:
         await sent.edit_text(f"<code>{html.escape(str(error))}</code>")
         return
 
@@ -116,7 +116,7 @@ async def upgrade_callback(callback: CallbackQuery):
     for command in commands:
         try:
             stdout += await shell_run(command)
-        except ShellException as error:
+        except ShellExceptionError as error:
             await sent.edit_text(f"<code>{html.escape(str(error))}</code>")
             return
 
@@ -137,7 +137,7 @@ async def bot_shell(message: Message, command: CommandObject):
 
     try:
         stdout = await shell_run(command=code)
-    except ShellException as error:
+    except ShellExceptionError as error:
         await sent.edit_text(f"<code>{html.escape(str(error))}</code>")
         return
 
@@ -164,12 +164,13 @@ async def evaluate(message: Message, command: CommandObject):
     except BaseException:
         exc = sys.exc_info()
         exc = "".join(
-            traceback.format_exception(exc[0], exc[1], exc[2].tb_next.tb_next.tb_next)  # type: ignore[misc]  # noqa: F821, E501
+            traceback.format_exception(exc[0], exc[1], exc[2].tb_next.tb_next.tb_next)  # type: ignore[misc]  # noqa: E501
         )
         error_txt = "<b>Failed to execute the expression:\n&gt;</b> <code>{eval}</code>"
         error_txt += "\n\n<b>Error:\n&gt;</b> <code>{exc}</code>"
         await sent.edit_text(
-            error_txt.format(eval=query, exc=html.escape(exc)), disable_web_page_preview=True
+            error_txt.format(eval=query, exc=html.escape(exc)),
+            disable_web_page_preview=True,
         )
         return
 

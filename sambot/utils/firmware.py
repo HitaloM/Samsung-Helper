@@ -8,7 +8,12 @@ from bs4 import BeautifulSoup
 
 from sambot import FWSession
 from sambot.utils.logging import log
-from sambot.utils.pda import get_build_id, get_build_month, get_build_year, get_major_version
+from sambot.utils.pda import (
+    get_build_id,
+    get_build_month,
+    get_build_year,
+    get_major_version,
+)
 
 
 class SamsungFirmwareInfo:
@@ -153,7 +158,10 @@ class SamsungFirmwareInfo:
         except (KeyboardInterrupt, CancelledError):
             raise
         except BaseException:
-            log.error("[SamsungFirmwareInfo] Failed to fetch latest firmware info", exc_info=True)
+            log.error(
+                "[SamsungFirmwareInfo] Failed to fetch latest firmware info",
+                exc_info=True,
+            )
 
 
 FirmwareInfo = SamsungFirmwareInfo()

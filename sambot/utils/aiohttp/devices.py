@@ -16,7 +16,7 @@ class GSMClient(AiohttpBaseClient):
         await asyncio.sleep(self.fetch_interval)
         return await self._make_request(
             "GET",
-            url=f"/samsung-phones-f-9-0-p{str(page)}.php",
+            url=f"/samsung-phones-f-9-0-p{page!s}.php",
             get_text=True,
         )
 

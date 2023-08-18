@@ -39,7 +39,12 @@ async def main():
     dp.callback_query.middleware(ACLMiddleware())
     dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
 
-    dp.include_routers(pm_menu.router, doas.router, language.router, tools.router)
+    dp.include_routers(
+        pm_menu.router,
+        doas.router,
+        language.router,
+        tools.router,
+    )
 
     await set_ui_commands(bot, i18n)
 

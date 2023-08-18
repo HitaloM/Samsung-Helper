@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-08 17:28-0300\n"
+"POT-Creation-Date: 2023-08-18 20:40-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,11 @@ msgstr ""
 msgid "🌎 Contribute in translations!"
 msgstr ""
 
-#: sambot/handlers/language.py:65 sambot/handlers/pm_menu.py:63
+#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:63
 msgid "🔙 Back"
 msgstr ""
 
-#: sambot/handlers/language.py:87
+#: sambot/handlers/language.py:88
 msgid "Changed language to {lang}"
 msgstr ""
 
@@ -84,6 +84,10 @@ msgstr ""
 msgid "📚 Channel"
 msgstr ""
 
+#: sambot/handlers/specs.py:21 sambot/handlers/specs.py:32
+msgid "No device found."
+msgstr ""
+
 #: sambot/handlers/tools.py:23
 msgid "<b>Below are some useful tools for Samsung Galaxy devices</b>:"
 msgstr ""
@@ -100,6 +104,6 @@ msgstr ""
 msgid "About the bot."
 msgstr ""
 
-#: sambot/utils/command_list.py:40
+#: sambot/utils/command_list.py:38
 msgid "Start the bot."
 msgstr ""

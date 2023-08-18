@@ -13,7 +13,12 @@ from yarl import URL
 
 from sambot import KernelSession, app_dir
 from sambot.utils.logging import log
-from sambot.utils.pda import get_build_id, get_build_month, get_build_year, get_major_version
+from sambot.utils.pda import (
+    get_build_id,
+    get_build_month,
+    get_build_year,
+    get_major_version,
+)
 
 OSS_BASE_URL: str = "https://opensource.samsung.com"
 OSS_SEARCH_URL: str = OSS_BASE_URL + "/uploadSearch?searchValue="
@@ -140,7 +145,10 @@ class SamsungKernelInfo:
                                 break
 
                 if attach_ids is None or attach_ids == "":
-                    log.error("[SamsungKernelInfo] - Did not find attachment for %s", str(self))
+                    log.error(
+                        "[SamsungKernelInfo] - Did not find attachment for %s",
+                        str(self),
+                    )
                     return None
 
                 if isinstance(attach_ids, list):
@@ -250,12 +258,18 @@ class SamsungKernelInfo:
                             )
 
                         return self.KernelMeta(
-                            model=model, pda=fw_version, upload_id=upload_id, patch_kernel=None
+                            model=model,
+                            pda=fw_version,
+                            upload_id=upload_id,
+                            patch_kernel=None,
                         )
         except (KeyboardInterrupt, CancelledError):
             raise
         except BaseException:
-            log.error("[SamsungKernelInfo] - Failed to fetch latest kernel for model %s", model)
+            log.error(
+                "[SamsungKernelInfo] - Failed to fetch latest kernel for model %s",
+                model,
+            )
             return None
 
 
