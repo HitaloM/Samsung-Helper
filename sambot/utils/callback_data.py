@@ -11,3 +11,15 @@ class LanguageCallback(CallbackData, prefix="setlang"):
 
 class StartCallback(CallbackData, prefix="start"):
     menu: str
+
+
+class DeviceCallback(CallbackData, prefix="device"):
+    device: str | int
+    user_id: int
+    is_search: bool = False
+
+
+class SpecCallback(CallbackData, prefix="spec"):
+    device: int
+    user_id: int
+    is_search: bool = False

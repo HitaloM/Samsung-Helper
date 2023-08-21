@@ -21,6 +21,14 @@ async def set_ui_commands(bot: Bot, i18n: I18n):
         for lang in i18n.available_locales:
             all_chats_commands: list[BotCommand] = [
                 BotCommand(
+                    command="devices",
+                    description=_("Get brief information about a device.", locale=lang),
+                ),
+                BotCommand(
+                    command="specs",
+                    description=_("Get specifications of a device.", locale=lang),
+                ),
+                BotCommand(
                     command="tools",
                     description=_("Get latest tools for Samsung Galaxy", locale=lang),
                 ),

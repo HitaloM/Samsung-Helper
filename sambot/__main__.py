@@ -14,7 +14,7 @@ from aiosqlite import __version__ as aiosqlite_version
 from sambot import __version__ as sambot_version
 from sambot import bot, config, dp, i18n
 from sambot.database import create_tables
-from sambot.handlers import doas, language, pm_menu, tools
+from sambot.handlers import devices, doas, language, pm_menu, specs, tools
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
 from sambot.utils.command_list import set_ui_commands
@@ -44,6 +44,8 @@ async def main():
         doas.router,
         language.router,
         tools.router,
+        devices.router,
+        specs.router,
     )
 
     await set_ui_commands(bot, i18n)

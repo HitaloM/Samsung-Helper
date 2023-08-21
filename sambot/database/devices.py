@@ -114,5 +114,25 @@ class Devices(SqliteConnection):
         r = await Devices._make_request(self.db_path, sql, params, fetch=True, mult=True)
         return [i[0] for i in r] if r else None
 
+    async def search_devices(self, query: str) -> list | str | None:
+        sql = """
+        SELECT * FROM devices
+        WHERE Name LIKE ? OR DeviceID IN (
+            SELECT DeviceID FROM models WHERE Model LIKE ?
+        )
+        """
+        params = (f"%{query}%", f"%{query}%")
+        return await Devices._make_request(self.db_path, sql, params, fetch=True, mult=True)
+
+    async def get_device_by_id(self, device_id: int) -> list | str | None:
+        sql = "SELECT * FROM devices WHERE DeviceID = ?"
+        params = (device_id,)
+        return await Devices._make_request(self.db_path, sql, params, fetch=True)
+
+    async def get_specs_by_id(self, device_id: int) -> list | str | None:
+        sql = "SELECT * FROM details WHERE DeviceID = ?"
+        params = (device_id,)
+        return await Devices._make_request(self.db_path, sql, params, fetch=True, mult=True)
+
 
 devices_db = Devices()
