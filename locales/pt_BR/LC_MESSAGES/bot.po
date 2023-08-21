@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-18 20:40-0300\n"
-"PO-Revision-Date: 2023-08-18 23:44\n"
+"POT-Creation-Date: 2023-08-21 16:05-0300\n"
+"PO-Revision-Date: 2023-08-21 19:08\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,23 @@ msgstr ""
 "X-Crowdin-File: /main/locales/bot.pot\n"
 "X-Crowdin-File-ID: 55\n"
 "Language: pt_BR\n"
+
+#: sambot/handlers/devices.py:33 sambot/handlers/specs.py:31
+msgid "You need to specify an device. Use /device name"
+msgstr ""
+
+#: sambot/handlers/devices.py:51 sambot/handlers/specs.py:49
+msgid "This button is not for you."
+msgstr ""
+
+#: sambot/handlers/devices.py:68 sambot/handlers/devices.py:97
+#: sambot/handlers/specs.py:62 sambot/handlers/specs.py:96
+msgid "No device found."
+msgstr ""
+
+#: sambot/handlers/devices.py:88 sambot/handlers/specs.py:82
+msgid "Search Results For: {query}"
+msgstr ""
 
 #: sambot/handlers/language.py:32
 msgid "You can select your preferred language for the bot in this chat by clicking on one of the buttons below. These are the languages that the bot currently supports.\n"
@@ -77,8 +94,8 @@ msgstr ""
 msgid "📚 Channel"
 msgstr ""
 
-#: sambot/handlers/specs.py:21 sambot/handlers/specs.py:32
-msgid "No device found."
+#: sambot/handlers/specs.py:91
+msgid "No specs found."
 msgstr ""
 
 #: sambot/handlers/tools.py:23
@@ -86,18 +103,26 @@ msgid "<b>Below are some useful tools for Samsung Galaxy devices</b>:"
 msgstr ""
 
 #: sambot/utils/command_list.py:25
-msgid "Get latest tools for Samsung Galaxy"
+msgid "Get brief information about a device."
 msgstr ""
 
 #: sambot/utils/command_list.py:29
-msgid "Change bot language."
+msgid "Get specifications of a device."
 msgstr ""
 
 #: sambot/utils/command_list.py:33
+msgid "Get latest tools for Samsung Galaxy"
+msgstr ""
+
+#: sambot/utils/command_list.py:37
+msgid "Change bot language."
+msgstr ""
+
+#: sambot/utils/command_list.py:41
 msgid "About the bot."
 msgstr ""
 
-#: sambot/utils/command_list.py:38
+#: sambot/utils/command_list.py:46
 msgid "Start the bot."
 msgstr ""
 
