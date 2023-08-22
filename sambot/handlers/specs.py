@@ -28,7 +28,7 @@ async def get_specs(
         return
 
     if command and not command.args:
-        await message.reply(_("You need to specify an device. Use /device name"))
+        await message.reply(_("You need to specify an device. Use /specs name"))
         return
 
     query = str(
@@ -105,7 +105,7 @@ async def get_specs(
 
     device_name = device[1]
     device_img = device[3]
-    response = f"<b>Specs for {device_name}</b>\n\n"
+    response = _("<b>Specs for {device}</b>\n\n").format(device=device_name)
     for category, specs in categories.items():
         response += f"<b>{category}</b>\n"
         for spec in specs:

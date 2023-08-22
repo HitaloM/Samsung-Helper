@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-21 16:05-0300\n"
+"POT-Creation-Date: 2023-08-22 10:57-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: sambot/handlers/devices.py:33 sambot/handlers/specs.py:31
+#: sambot/handlers/devices.py:33
 msgid "You need to specify an device. Use /device name"
 msgstr ""
 
@@ -59,7 +59,8 @@ msgstr ""
 msgid "🌎 Contribute in translations!"
 msgstr ""
 
-#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:63
+#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:57
+#: sambot/handlers/pm_menu.py:99
 msgid "🔙 Back"
 msgstr ""
 
@@ -76,33 +77,57 @@ msgid "🌐 Language"
 msgstr ""
 
 #: sambot/handlers/pm_menu.py:29
-msgid "Samsung Firmwares Updater"
+msgid "📚 Help"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:32
+#: sambot/handlers/pm_menu.py:34
 msgid ""
 "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. "
 "You can have a look at my features in the help menu by clicking the "
-"button below.\n"
-"\n"
-"To checkout my commands just type in the <code>/</code> (bar) icon in the"
-" group and select a command or in the <i>menu</i> button in PM."
+"button below."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:53
+#: sambot/handlers/pm_menu.py:61
+msgid ""
+"\n"
+"Need help?\n"
+"\n"
+"<b>General commands:</b>\n"
+"<b>/start</b> - Start the bot.\n"
+"<b>/help</b> - Show this message.\n"
+"<b>/about</b> - About the bot.\n"
+"<b>/language</b> - Change the bot language.\n"
+"\n"
+"<b>Device commands:</b>\n"
+"<b>/specs</b> - Get device specifications.\n"
+"<b>/device</b> - Get device brief information.\n"
+"        "
+msgstr ""
+
+#: sambot/handlers/pm_menu.py:89
 msgid "This bot is made to help Samsung Galaxy users."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:56
+#: sambot/handlers/pm_menu.py:92
 msgid "📦 GitHub"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:57
+#: sambot/handlers/pm_menu.py:93
 msgid "📚 Channel"
+msgstr ""
+
+#: sambot/handlers/specs.py:31
+msgid "You need to specify an device. Use /specs name"
 msgstr ""
 
 #: sambot/handlers/specs.py:91
 msgid "No specs found."
+msgstr ""
+
+#: sambot/handlers/specs.py:108
+msgid ""
+"<b>Specs for {device}</b>\n"
+"\n"
 msgstr ""
 
 #: sambot/handlers/tools.py:23
@@ -131,4 +156,8 @@ msgstr ""
 
 #: sambot/utils/command_list.py:46
 msgid "Start the bot."
+msgstr ""
+
+#: sambot/utils/command_list.py:47
+msgid "Get bot help menu."
 msgstr ""

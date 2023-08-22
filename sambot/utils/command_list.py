@@ -21,7 +21,7 @@ async def set_ui_commands(bot: Bot, i18n: I18n):
         for lang in i18n.available_locales:
             all_chats_commands: list[BotCommand] = [
                 BotCommand(
-                    command="devices",
+                    command="device",
                     description=_("Get brief information about a device.", locale=lang),
                 ),
                 BotCommand(
@@ -44,6 +44,7 @@ async def set_ui_commands(bot: Bot, i18n: I18n):
 
             user_commands: list[BotCommand] = [
                 BotCommand(command="start", description=_("Start the bot.", locale=lang)),
+                BotCommand(command="help", description=_("Get bot help menu.", locale=lang)),
                 *all_chats_commands,
             ]
 
