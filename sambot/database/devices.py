@@ -40,6 +40,7 @@ class Devices(SqliteConnection):
             FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
         );
         """
+
         for i in sql.split(";"):
             await Devices._make_request(self.db_path, i)
 

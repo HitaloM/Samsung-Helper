@@ -13,7 +13,11 @@ from aiosqlite import __version__ as aiosqlite_version
 
 from sambot import __version__ as sambot_version
 from sambot import bot, config, dp, i18n
-from sambot.database import create_tables
+from sambot.database import create_tables, run_vacuum
+from sambot.database.chats import chats_db
+from sambot.database.devices import devices_db
+from sambot.database.firmware import Firmwares
+from sambot.database.users import users_db
 from sambot.handlers import devices, doas, language, pm_menu, specs, tools
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
@@ -33,6 +37,14 @@ async def main():
         )
 
     await create_tables()
+    dbs = [
+        chats_db.db_path,
+        devices_db.db_path,
+        Firmwares().db_path,
+        users_db.db_path,
+    ]
+    for db in dbs:
+        await run_vacuum(db)
 
     dp.message.middleware(ACLMiddleware())
     dp.message.middleware(MyI18nMiddleware(i18n=i18n))

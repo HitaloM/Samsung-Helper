@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
 
-from .base import SqliteConnection, SqliteDBConn
+from .base import SqliteConnection, SqliteDBConn, run_vacuum
 from .chats import chats_db
 from .devices import devices_db
 from .firmware import Firmwares
@@ -10,6 +10,7 @@ from .users import users_db
 __all__ = (
     "SqliteConnection",
     "SqliteDBConn",
+    "run_vacuum",
     "chats_db",
     "devices_db",
     "Firmwares",
