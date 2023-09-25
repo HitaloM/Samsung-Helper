@@ -10,7 +10,7 @@ import traceback
 from pathlib import Path
 from signal import SIGINT
 
-import msgspec
+import orjson
 from aiofile import async_open
 from aiogram import F, Router
 from aiogram.filters import Command, CommandObject
@@ -40,7 +40,7 @@ async def error_test(message: Message):
 
 @router.message(Command("event"))
 async def json_dump(message: Message):
-    event = str(msgspec.json.encode(str(message)).decode())
+    event = str(orjson.dumps(str(message)).decode())
     await message.reply(event)
 
 
