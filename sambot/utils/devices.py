@@ -70,7 +70,7 @@ class SamsungDeviceScraper:
                 url=element.select("a")[0].attrs["href"],
                 id=int(
                     element.select("a")[0].attrs["href"][
-                        element.select("a")[0].attrs["href"].rfind("-") + 1 : element.select("a")[
+                        element.select("a")[0].attrs["href"].rfind("-") + 1: element.select("a")[
                             0
                         ]
                         .attrs["href"]
@@ -199,8 +199,12 @@ class SamsungDeviceScraper:
                 )
                 region_set = {element.text for element in region_elements}
                 device_meta.regions[model] = region_set
-            except Exception as e:
-                log.error("[DeviceScraper] - Failed to get regions for model %s: %s", model, e)
+            except Exception:
+                log.error(
+                    "[DeviceScraper] - Failed to get regions!",
+                    model=model,
+                    exc_info=True,
+                )
 
         return device_meta
 
@@ -220,44 +224,43 @@ class SamsungDeviceScraper:
                     -1
                 ].text
             )
-        except Exception as e:
-            log.error("[DeviceScraper] - Failed to get pages count: %s", e)
+        except Exception:
+            log.error("[DeviceScraper] - Failed to get pages count!", exc_info=True)
             return
-        log.info("[DeviceScraper] - Found %d pages of devices", pages_count)
+        log.info("[DeviceScraper] - Found pages of devices.", pages=pages_count)
 
         devices = []
         for i in range(1, pages_count + 1):
             device_meta = await self.fetch_page(i)
             devices.extend(device_meta)
 
-        log.info("[DeviceScraper] - %d total devices", len(devices))
+        log.info("[DeviceScraper] - Devices found.", count=len(devices))
         devices = [
             device for device in devices if "Galaxy" in device.name and "Watch" not in device.name
         ]
-        log.info("[DeviceScraper] - %d filtered devices (Stage 1)", len(devices))
+        log.info("[DeviceScraper] - (Stage 1) Filtered devices.", filtered=len(devices))
 
         details_devices = []
         for i in range(len(devices)):
             device = devices[i]
             log.info(
-                "[DeviceScraper] - Fetching device details for %s (%d/%d)",
-                device.name,
-                i + 1,
-                len(devices),
+                "[DeviceScraper] - Fetching device details...",
+                device=device.name,
+                proccess=f"{i + 1}/{len(devices)}",
             )
             device = await self.fill_details(device)
             details_devices.append(device)
 
         devices = list(filter(self.is_device_relevant, details_devices))
-        log.info("[DeviceScraper] - %d filtered devices (Stage 2)", len(devices))
+        log.info("[DeviceScraper] - (Stage 2) Filtered devices.", filtered=len(devices))
         devices = sorted(devices, key=lambda x: self.get_model_supername(x))
 
         try:
             for device in devices:
                 await devices_db.save(device)
-            log.info("[DeviceScraper] - Saved %d devices to database", len(devices))
-        except BaseException as e:
-            log.error("[DeviceScraper] - Failed to save devices to database: %s", e)
+            log.info("[DeviceScraper] - Saved devices to database.", count=len(devices))
+        except BaseException:
+            log.error("[DeviceScraper] - Failed to save devices to database!", exc_info=True)
 
 
 DeviceScraper = SamsungDeviceScraper()

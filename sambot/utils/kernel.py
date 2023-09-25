@@ -146,8 +146,8 @@ class SamsungKernelInfo:
 
                 if attach_ids is None or attach_ids == "":
                     log.error(
-                        "[SamsungKernelInfo] - Did not find attachment for %s",
-                        str(self),
+                        "[SamsungKernelInfo] - Did not find attachment!",
+                        kernel=self.raw,
                     )
                     return None
 
@@ -267,8 +267,8 @@ class SamsungKernelInfo:
             raise
         except BaseException:
             log.error(
-                "[SamsungKernelInfo] - Failed to fetch latest kernel for model %s",
-                model,
+                "[SamsungKernelInfo] - Failed to fetch latest kernel!",
+                device=model,
             )
             return None
 

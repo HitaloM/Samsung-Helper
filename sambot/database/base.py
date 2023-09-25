@@ -60,8 +60,13 @@ class SqliteConnection:
                     if fetch:
                         return await cursor.fetchall() if mult else await cursor.fetchone()
                     await conn.commit()
-            except BaseException as e:
-                log.error("[SqliteConnection] - Failed to execute query: %s", e)
+            except BaseException:
+                log.error(
+                    "[SqliteConnection] - Failed to execute query!",
+                    sql=sql,
+                    params=params,
+                    exc_info=True,
+                )
 
     @staticmethod
     def _convert_to_model(data: dict, model: type[T]) -> T:

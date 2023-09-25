@@ -159,7 +159,7 @@ class SamsungFirmwareInfo:
             raise
         except BaseException:
             log.error(
-                "[SamsungFirmwareInfo] Failed to fetch latest firmware info",
+                "[SamsungFirmwareInfo] Failed to fetch latest firmware info!",
                 exc_info=True,
             )
 

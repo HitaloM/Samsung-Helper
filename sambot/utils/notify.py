@@ -19,14 +19,14 @@ fw_queue = asyncio.Queue()
 
 async def process_firmware(model: str):
     if not config.fw_channel:
-        log.error("[FirmwaresSync] - Firmware channel not set!")
+        log.warn("[FirmwaresSync] - Firmware channel not set!")
         return
 
     firmwares_db = Firmwares()
 
     model_regions = await devices_db.get_regions_by_model(model)
     if not model_regions:
-        log.warn("[FirmwaresSync] - No regions found for model: %s", model)
+        log.warn("[FirmwaresSync] - No regions found!", device=model)
         return
 
     if model_regions:
@@ -35,17 +35,16 @@ async def process_firmware(model: str):
 
             if not info:
                 log.warn(
-                    "[FirmwaresSync] - Model %s not found in any known region! "
-                    "Known Regions: %s",
-                    model,
-                    await devices_db.get_regions_by_model(model),
+                    "[FirmwaresSync] - Model not found in any known region!",
+                    device=model,
+                    regions=await devices_db.get_regions_by_model(model),
                 )
             else:
                 log.info(
-                    "[FirmwaresSync] - Found firmware %s/%s for model %s",
-                    region,
-                    info.pda,
-                    model,
+                    "[FirmwaresSync] - Found firmware!",
+                    region=region,
+                    pda=info.pda,
+                    device=model,
                 )
 
                 pda = await firmwares_db.get_pda(model)
@@ -76,8 +75,8 @@ async def process_firmware(model: str):
                         )
                     except TelegramRetryAfter as e:
                         log.warn(
-                            "[FirmwaresSync] - Telegram Retry-After: %s seconds",
-                            e.retry_after,
+                            "[FirmwaresSync] - We are being rate limited! Waiting to retry...",
+                            wait_time=e.retry_after,
                         )
                         await asyncio.sleep(e.retry_after)
                         await bot.send_message(
@@ -94,8 +93,7 @@ async def process_firmware(model: str):
                             )
                         else:
                             log.error(
-                                "[FirmwaresSync] - Telegram Bad Request: %s",
-                                e.message,
+                                "[FirmwaresSync] - Telegram Bad Request error!",
                                 exc_info=True,
                             )
                             await channel_log(
@@ -137,7 +135,7 @@ async def sync_firmwares():
         return
 
     for model in all_models:
-        log.debug("[FirmwaresSync] - Adding model to the queue: %s", model)
+        log.debug("[FirmwaresSync] - Adding device to the queue.", device=model)
         await fw_queue.put(model)
 
     async def task():
@@ -147,7 +145,7 @@ async def sync_firmwares():
             except asyncio.TimeoutError:
                 break
             else:
-                log.info("[FirmwaresSync] - Checking model: %s", model)
+                log.info("[FirmwaresSync] - Checking device.", device=model)
                 await process_firmware(model)
 
     while not fw_queue.empty():

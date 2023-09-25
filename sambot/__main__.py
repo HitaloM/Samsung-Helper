@@ -25,7 +25,7 @@ from sambot.utils.notify import sync_firmwares
 
 async def main():
     if config.sentry_url:
-        log.info("Starting sentry.io integraion...")
+        log.info("Starting sentry.io integraion.")
 
         sentry_sdk.init(
             str(config.sentry_url),
@@ -65,7 +65,7 @@ async def main():
 
     with suppress(TelegramForbiddenError):
         if config.logs_channel:
-            log.info("Sending startup notification...")
+            log.info("Sending startup notification.")
             await bot.send_message(
                 config.logs_channel,
                 text=(

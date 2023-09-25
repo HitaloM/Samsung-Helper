@@ -28,7 +28,7 @@ with suppress(ShellExceptionError):
 
 __version__ = f"{commit_hash} ({commit_count})"
 
-log.info("Starting Samgung Helper Bot... | Version: %s", __version__)
+log.info("Starting Samgung Helper Bot...", version=__version__)
 
 app_dir: Path = Path(__file__).parent.parent
 locales_dir: Path = app_dir / "locales"
