@@ -1,14 +1,15 @@
-# Translations template for Gojira.
+# Translations template for Samsung-Helper.
 # Copyright (C) 2023 Hitalo M.
-# This file is distributed under the same license as the Gojira project.
+# This file is distributed under the same license as the Samsung-Helper
+# project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Gojira 1.0\n"
+"Project-Id-Version: Samsung-Helper 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-09-25 13:33-0300\n"
+"POT-Creation-Date: 2023-09-25 13:48-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,8 +60,8 @@ msgstr ""
 msgid "🌎 Contribute in translations!"
 msgstr ""
 
-#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:57
-#: sambot/handlers/pm_menu.py:99
+#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:58
+#: sambot/handlers/pm_menu.py:100
 msgid "🔙 Back"
 msgstr ""
 
@@ -68,26 +69,26 @@ msgstr ""
 msgid "Changed language to {lang}"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:27
+#: sambot/handlers/pm_menu.py:28
 msgid "ℹ️ About"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:28
+#: sambot/handlers/pm_menu.py:29
 msgid "🌐 Language"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:29
+#: sambot/handlers/pm_menu.py:30
 msgid "📚 Help"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:34
+#: sambot/handlers/pm_menu.py:35
 msgid ""
 "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. "
 "You can have a look at my features in the help menu by clicking the "
 "button below."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:61
+#: sambot/handlers/pm_menu.py:62
 msgid ""
 "\n"
 "Need help?\n"
@@ -104,15 +105,15 @@ msgid ""
 "        "
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:89
+#: sambot/handlers/pm_menu.py:90
 msgid "This bot is made to help Samsung Galaxy users."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:92
+#: sambot/handlers/pm_menu.py:93
 msgid "📦 GitHub"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:93
+#: sambot/handlers/pm_menu.py:94
 msgid "📚 Channel"
 msgstr ""
 

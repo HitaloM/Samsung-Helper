@@ -11,7 +11,7 @@ from babel import Locale
 
 from sambot import i18n
 from sambot.database import chats_db, users_db
-from sambot.filters.user_status import IsAdmin
+from sambot.filters.users import IsAdmin
 from sambot.utils.callback_data import LanguageCallback, StartCallback
 from sambot.utils.language import get_chat_language
 

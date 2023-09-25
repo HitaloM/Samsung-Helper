@@ -20,7 +20,7 @@ from meval import meval
 
 from sambot import i18n
 from sambot.database import chats_db, users_db
-from sambot.filters.user_status import IsSudo
+from sambot.filters.users import IsSudo
 from sambot.utils.callback_data import StartCallback
 from sambot.utils.systools import ShellExceptionError, parse_commits, shell_run
 
