@@ -11,14 +11,14 @@ from aiogram import __version__ as aiogram_version
 from aiogram.exceptions import TelegramForbiddenError
 from aiosqlite import __version__ as aiosqlite_version
 
+from sambot import FWSession, GSMSession, KernelSession, RegionsSession, bot, config, dp, i18n
 from sambot import __version__ as sambot_version
-from sambot import bot, config, dp, i18n
 from sambot.database import create_tables, run_vacuum
 from sambot.database.chats import chats_db
 from sambot.database.devices import devices_db
 from sambot.database.firmware import Firmwares
 from sambot.database.users import users_db
-from sambot.handlers import devices, doas, language, pm_menu, specs, tools
+from sambot.handlers import load_modules
 from sambot.middlewares.acl import ACLMiddleware
 from sambot.middlewares.i18n import MyI18nMiddleware
 from sambot.utils.command_list import set_ui_commands
@@ -51,14 +51,7 @@ async def main():
     dp.callback_query.middleware(ACLMiddleware())
     dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
 
-    dp.include_routers(
-        pm_menu.router,
-        doas.router,
-        language.router,
-        tools.router,
-        devices.router,
-        specs.router,
-    )
+    load_modules(dp)
 
     await set_ui_commands(bot, i18n)
 
@@ -91,6 +84,13 @@ async def main():
     # resolve used update types
     useful_updates = dp.resolve_used_update_types()
     await dp.start_polling(bot, allowed_updates=useful_updates)
+
+    # close aiohttp connections
+    log.info("Closing aiohttp connections.")
+    await GSMSession.close()
+    await RegionsSession.close()
+    await FWSession.close()
+    await KernelSession.close()
 
 
 if __name__ == "__main__":
