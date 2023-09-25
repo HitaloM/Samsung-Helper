@@ -70,8 +70,11 @@ class SamsungDeviceScraper:
                 url=element.select("a")[0].attrs["href"],
                 id=int(
                     element.select("a")[0].attrs["href"][
-                        element.select("a")[0].attrs["href"].rfind("-")
-                        + 1 : element.select("a")[0].attrs["href"].rfind(".php")
+                        element.select("a")[0].attrs["href"].rfind("-") + 1 : element.select("a")[
+                            0
+                        ]
+                        .attrs["href"]
+                        .rfind(".php")
                     ]
                 ),
                 img_url=element.select("a > img")[0].attrs["src"],
