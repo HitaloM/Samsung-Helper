@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-22 10:57-0300\n"
-"PO-Revision-Date: 2023-08-22 14:08\n"
+"POT-Creation-Date: 2023-09-25 13:48-0300\n"
+"PO-Revision-Date: 2023-09-25 17:14\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -57,8 +57,8 @@ msgstr "\n"
 msgid "🌎 Contribute in translations!"
 msgstr "🌎 Contribua nas traduções!"
 
-#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:57
-#: sambot/handlers/pm_menu.py:99
+#: sambot/handlers/language.py:66 sambot/handlers/pm_menu.py:58
+#: sambot/handlers/pm_menu.py:100
 msgid "🔙 Back"
 msgstr "🔙 Voltar"
 
@@ -66,23 +66,23 @@ msgstr "🔙 Voltar"
 msgid "Changed language to {lang}"
 msgstr "Idioma alterado para {lang}"
 
-#: sambot/handlers/pm_menu.py:27
+#: sambot/handlers/pm_menu.py:28
 msgid "ℹ️ About"
 msgstr "ℹ️ Sobre"
 
-#: sambot/handlers/pm_menu.py:28
+#: sambot/handlers/pm_menu.py:29
 msgid "🌐 Language"
 msgstr "🌐 Idioma"
 
-#: sambot/handlers/pm_menu.py:29
+#: sambot/handlers/pm_menu.py:30
 msgid "📚 Help"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:34
+#: sambot/handlers/pm_menu.py:35
 msgid "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. You can have a look at my features in the help menu by clicking the button below."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:61
+#: sambot/handlers/pm_menu.py:62
 msgid "\n"
 "Need help?\n\n"
 "<b>General commands:</b>\n"
@@ -96,15 +96,15 @@ msgid "\n"
 "        "
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:89
+#: sambot/handlers/pm_menu.py:90
 msgid "This bot is made to help Samsung Galaxy users."
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:92
+#: sambot/handlers/pm_menu.py:93
 msgid "📦 GitHub"
 msgstr ""
 
-#: sambot/handlers/pm_menu.py:93
+#: sambot/handlers/pm_menu.py:94
 msgid "📚 Channel"
 msgstr ""
 
