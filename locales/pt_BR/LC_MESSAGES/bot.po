@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-09-25 13:48-0300\n"
-"PO-Revision-Date: 2023-09-25 17:14\n"
+"PO-Revision-Date: 2024-01-26 19:46\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -20,20 +20,20 @@ msgstr ""
 
 #: sambot/handlers/devices.py:33
 msgid "You need to specify an device. Use /device name"
-msgstr ""
+msgstr "Você precisa especificar um dispositivo. Use /device nome"
 
 #: sambot/handlers/devices.py:51 sambot/handlers/specs.py:49
 msgid "This button is not for you."
-msgstr ""
+msgstr "Este botão não é para você."
 
 #: sambot/handlers/devices.py:68 sambot/handlers/devices.py:97
 #: sambot/handlers/specs.py:62 sambot/handlers/specs.py:96
 msgid "No device found."
-msgstr ""
+msgstr "Nenhum dispositivo encontrado."
 
 #: sambot/handlers/devices.py:88 sambot/handlers/specs.py:82
 msgid "Search Results For: {query}"
-msgstr ""
+msgstr "Resultados da busca por {query}"
 
 #: sambot/handlers/language.py:32
 msgid "You can select your preferred language for the bot in this chat by clicking on one of the buttons below. These are the languages that the bot currently supports.\n"
@@ -76,11 +76,11 @@ msgstr "🌐 Idioma"
 
 #: sambot/handlers/pm_menu.py:30
 msgid "📚 Help"
-msgstr ""
+msgstr "📚 Ajuda"
 
 #: sambot/handlers/pm_menu.py:35
 msgid "Hello <b>{user_name}</b>! I'm a bot made to help Samsung Galaxy users. You can have a look at my features in the help menu by clicking the button below."
-msgstr ""
+msgstr "Olá <b>{user_name}</b>! Sou um bot feito para ajudar os usuários da Samsung Galaxy. Você pode dar uma olhada nos meus recursos no menu de ajuda clicando no botão abaixo."
 
 #: sambot/handlers/pm_menu.py:62
 msgid "\n"
@@ -98,47 +98,47 @@ msgstr ""
 
 #: sambot/handlers/pm_menu.py:90
 msgid "This bot is made to help Samsung Galaxy users."
-msgstr ""
+msgstr "Este bot foi feito para ajudar os usuários Samsung Galaxy."
 
 #: sambot/handlers/pm_menu.py:93
 msgid "📦 GitHub"
-msgstr ""
+msgstr "📦 GitHub"
 
 #: sambot/handlers/pm_menu.py:94
 msgid "📚 Channel"
-msgstr ""
+msgstr "📚 Canal"
 
 #: sambot/handlers/specs.py:31
 msgid "You need to specify an device. Use /specs name"
-msgstr ""
+msgstr "Você precisa especificar um dispositivo. Use /specs nome"
 
 #: sambot/handlers/specs.py:91
 msgid "No specs found."
-msgstr ""
+msgstr "Nenhuma especificação encontrada."
 
 #: sambot/handlers/specs.py:108
 msgid "<b>Specs for {device}</b>\n\n"
-msgstr ""
+msgstr "<b>Especificações para {device}</b>\n\n"
 
 #: sambot/handlers/tools.py:23
 msgid "<b>Below are some useful tools for Samsung Galaxy devices</b>:"
-msgstr ""
+msgstr "<b>Abaixo estão algumas ferramentas úteis para dispositivos Samsung Galaxy</b>:"
 
 #: sambot/utils/command_list.py:25
 msgid "Get brief information about a device."
-msgstr ""
+msgstr "Obtenha informações breves sobre um dispositivo."
 
 #: sambot/utils/command_list.py:29
 msgid "Get specifications of a device."
-msgstr ""
+msgstr "Obtém especificações de um dispositivo."
 
 #: sambot/utils/command_list.py:33
 msgid "Get latest tools for Samsung Galaxy"
-msgstr ""
+msgstr "Obtenha as últimas ferramentas para Samsung Galaxy"
 
 #: sambot/utils/command_list.py:37
 msgid "Change bot language."
-msgstr ""
+msgstr "Alterar idioma do bot."
 
 #: sambot/utils/command_list.py:41
 msgid "About the bot."
