@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: sambot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-09-25 13:48-0300\n"
-"PO-Revision-Date: 2024-01-26 19:46\n"
+"PO-Revision-Date: 2024-01-26 20:48\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -94,7 +94,16 @@ msgid "\n"
 "<b>/specs</b> - Get device specifications.\n"
 "<b>/device</b> - Get device brief information.\n"
 "        "
-msgstr ""
+msgstr "\n"
+"Necessita de ajuda?\n\n"
+"<b>Principais comandos:</b>\n"
+"<b>/start</b> - Inicia o bot.\n"
+"<b>/help</b> - Envia uma ajuda.\n"
+"<b>/about</b> - Sobre o bot.\n"
+"<b>/language</b> - Define o idioma do bot.\n\n"
+"<b>Comandos de Dispositivos:</b>\n"
+"<b>/specs</b> - Obtém as especificações do dispositivo.\n"
+"<b>/device</b> - Obtém breves informações sobre o dispositivo.        "
 
 #: sambot/handlers/pm_menu.py:90
 msgid "This bot is made to help Samsung Galaxy users."
@@ -142,13 +151,13 @@ msgstr "Alterar idioma do bot."
 
 #: sambot/utils/command_list.py:41
 msgid "About the bot."
-msgstr ""
+msgstr "Sobre o bot."
 
 #: sambot/utils/command_list.py:46
 msgid "Start the bot."
-msgstr ""
+msgstr "Inicia o bot."
 
 #: sambot/utils/command_list.py:47
 msgid "Get bot help menu."
-msgstr ""
+msgstr "Obtém o menu de ajuda do bot."
 
