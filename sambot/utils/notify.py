@@ -142,7 +142,7 @@ async def sync_firmwares():
         while not fw_queue.empty():
             try:
                 model = await asyncio.wait_for(fw_queue.get(), timeout=60)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 break
             else:
                 log.info("[FirmwaresSync] - Checking device.", device=model)

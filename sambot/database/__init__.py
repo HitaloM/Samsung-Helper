@@ -8,12 +8,12 @@ from .firmware import Firmwares
 from .users import users_db
 
 __all__ = (
+    "Firmwares",
     "SqliteConnection",
     "SqliteDBConn",
-    "run_vacuum",
     "chats_db",
     "devices_db",
-    "Firmwares",
+    "run_vacuum",
     "users_db",
 )
 
