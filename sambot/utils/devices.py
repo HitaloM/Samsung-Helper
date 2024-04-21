@@ -198,7 +198,7 @@ class SamsungDeviceScraper:
                 )
                 region_set = {element.text for element in region_elements}
                 device_meta.regions[model] = region_set
-            except Exception:
+            except BaseException:
                 log.error(
                     "[DeviceScraper] - Failed to get regions!",
                     model=model,
@@ -219,9 +219,7 @@ class SamsungDeviceScraper:
         doc = BeautifulSoup(r.data, "lxml")
         try:
             pages_count = int(
-                doc.select("#body > div > div.review-nav.pullNeg.col.pushT10 > div.nav-pages > a")[
-                    -1
-                ].text
+                doc.select("#body > div > div.review-nav-v2 > div > a:nth-child(5)")[-1].text
             )
         except Exception:
             log.error("[DeviceScraper] - Failed to get pages count!", exc_info=True)

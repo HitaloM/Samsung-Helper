@@ -23,6 +23,7 @@ dependencies = [
     "picologging>=0.9.3",
     "structlog>=24.1.0",
     "orjson>=3.10.1",
+    "better-exceptions>=0.3.3",
 ]
 
 [build-system]

@@ -48,7 +48,6 @@ async def process_firmware(model: str):
                 )
 
                 pda = await firmwares_db.get_pda(model)
-
                 if pda and info.is_newer_than(str(pda)):
                     keyboard = InlineKeyboardBuilder()
                     keyboard.button(text="Download ⬇️", url=info.download_url())
@@ -103,12 +102,19 @@ async def process_firmware(model: str):
                                 )
                             )
                     finally:
-                        await channel_log(
-                            text=(
-                                "<b>New firmware detected for "
-                                f"{info.name}</b> (<code>{info.model}</code>)"
+                        try:
+                            await channel_log(
+                                text=(
+                                    "<b>New firmware detected for "
+                                    f"{info.name}</b> (<code>{info.model}</code>)"
+                                )
                             )
-                        )
+                        except TelegramRetryAfter as e:
+                            log.warn(
+                                "[FirmwaresSync] - We are being rate limited! Waiting to retry...",
+                                wait_time=e.retry_after,
+                            )
+                            await asyncio.sleep(e.retry_after)
 
                     await firmwares_db.set_pda(model, info.pda)
 
