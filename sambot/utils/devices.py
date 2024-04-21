@@ -70,7 +70,7 @@ class SamsungDeviceScraper:
                 url=element.select("a")[0].attrs["href"],
                 id=int(
                     element.select("a")[0].attrs["href"][
-                        element.select("a")[0].attrs["href"].rfind("-") + 1: element.select("a")[
+                        element.select("a")[0].attrs["href"].rfind("-") + 1 : element.select("a")[
                             0
                         ]
                         .attrs["href"]
@@ -99,8 +99,7 @@ class SamsungDeviceScraper:
         split_models = models.split(",")
 
         models_set = set()
-        for model in split_models:
-            models_set.add(model.strip().split("/")[0])
+        models_set.update(model.strip().split("/")[0] for model in split_models)
 
         remove_models = set()
         for model in models_set:

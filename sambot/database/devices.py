@@ -4,8 +4,7 @@
 from pathlib import Path
 
 from sambot import app_dir
-
-from .base import SqliteConnection
+from sambot.database.base import SqliteConnection
 
 
 class Devices(SqliteConnection):

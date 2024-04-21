@@ -109,8 +109,8 @@ async def get_specs(
     for category, specs in categories.items():
         response += f"<b>{category}</b>\n"
         for spec in specs:
-            spec_name = f"<b>{spec['name']}</b>: " if spec["name"] else None
-            spec_value = spec["value"] if spec["value"] else None
+            spec_name = f"<b>{spec["name"]}</b>: " if spec["name"] else None
+            spec_value = spec["value"] or None
             if spec_name and spec_value:
                 response += f"{spec_name}{spec_value}\n"
         response += "\n"

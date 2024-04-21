@@ -3,7 +3,7 @@
 
 import asyncio
 
-from .client import AiohttpBaseClient, HttpResponseObject
+from sambot.utils.aiohttp.client import AiohttpBaseClient, HttpResponseObject
 
 
 class KernelClient(AiohttpBaseClient):

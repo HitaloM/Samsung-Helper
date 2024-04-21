@@ -159,7 +159,7 @@ class SamsungKernelInfo:
                     token = token_elem.get("value")  # type: ignore
                     query = (
                         f"_csrf={_csrf}&uploadId={self.upload_id}&attachIds={attach_ids}"
-                        f"&downloadPurpose=ETC&{urlencode({'token': token})}"
+                        f"&downloadPurpose=ETC&{urlencode({"token": token})}"
                     )
                     query_bin = query.encode()
 

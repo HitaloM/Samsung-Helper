@@ -125,7 +125,7 @@ async def sync_firmwares():
     await channel_log(
         text=(
             "<b>Starting firmwares sync...</b>\n\n"
-            f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}</code>\n"
+            f"<b>Time</b>: <code>{datetime.now().strftime("%d/%m/%Y, %H:%M:%S")}</code>\n"
         )
     )
 
@@ -142,7 +142,7 @@ async def sync_firmwares():
         while not fw_queue.empty():
             try:
                 model = await asyncio.wait_for(fw_queue.get(), timeout=60)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 break
             else:
                 log.info("[FirmwaresSync] - Checking device.", device=model)
@@ -155,6 +155,6 @@ async def sync_firmwares():
     await channel_log(
         text=(
             "<b>Firmwares sync finished!</b>\n\n"
-            f"<b>Time</b>: <code>{datetime.now().strftime('%d/%m/%Y - %H:%M:%S')}</code>\n"
+            f"<b>Time</b>: <code>{datetime.now().strftime("%d/%m/%Y - %H:%M:%S")}</code>\n"
         )
     )

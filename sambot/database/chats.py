@@ -7,8 +7,7 @@ from typing import Literal
 from aiogram.types import Chat
 
 from sambot import app_dir
-
-from .base import SqliteConnection
+from sambot.database.base import SqliteConnection
 
 
 class Chats(SqliteConnection):
