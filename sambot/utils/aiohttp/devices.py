@@ -3,42 +3,45 @@
 
 import asyncio
 
-from sambot.utils.aiohttp.client import AiohttpBaseClient, HttpResponseObject
+import aiohttp
+
+HEADERS: dict[str, str] = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "referer": "https://www.gsmarena.com/",
+}
 
 
-class GSMClient(AiohttpBaseClient):
+class GSMClient:
     def __init__(self) -> None:
-        self.base_url: str = "https://www.gsmarena.com"
         self.fetch_interval: int = 3
-        super().__init__(base_url=self.base_url)
 
-    async def get_devices_list(self, page: int) -> HttpResponseObject:
+    async def get_devices_list(self, page: int):
         await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/samsung-phones-f-9-0-p{page!s}.php",
-            get_text=True,
-        )
+        url = "https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/samsung-phones-9.php"
+        if page != 1:
+            url = f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/samsung-phones-f-9-0-p{page!s}.php"
 
-    async def get_device(self, url: str) -> HttpResponseObject:
+        async with aiohttp.ClientSession() as session:
+            r = await session.get(url, headers=HEADERS)
+            return await r.content.read()
+
+    async def get_device(self, url: str):
         await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/{url}",
-            get_text=True,
-        )
+        async with aiohttp.ClientSession() as session:
+            r = await session.get(
+                f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/{url}",
+                headers=HEADERS,
+            )
+            return await r.content.read()
 
 
-class RegionsClient(AiohttpBaseClient):
+class RegionsClient:
     def __init__(self) -> None:
-        self.base_url: str = "https://www.samfw.com"
         self.fetch_interval: int = 3
-        super().__init__(base_url=self.base_url)
 
-    async def get_regions(self, model: str) -> HttpResponseObject:
+    async def get_regions(self, model: str):
         await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/firmware/{model}",
-            get_text=True,
-        )
+        async with aiohttp.ClientSession() as session:
+            r = await session.get(url=f"https://www.samfw.com/firmware/{model}")
+            return await r.content.read()

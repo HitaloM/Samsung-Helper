@@ -3,27 +3,21 @@
 
 import asyncio
 
-from sambot.utils.aiohttp.client import AiohttpBaseClient, HttpResponseObject
+import aiohttp
 
 
-class FWClient(AiohttpBaseClient):
+class FWClient:
     def __init__(self) -> None:
-        self.base_url: str = "https://doc.samsungmobile.com/"
         self.fetch_interval: int = 3
-        super().__init__(base_url=self.base_url)
 
-    async def get_device_doc(self, model: str, redion: str) -> HttpResponseObject:
+    async def get_device_doc(self, model: str, redion: str):
         await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/{model}/{redion}/doc.html",
-            get_text=True,
-        )
+        async with aiohttp.ClientSession() as session:
+            r = await session.get(url=f"https://doc.samsungmobile.com/{model}/{redion}/doc.html")
+            return await r.content.read()
 
-    async def get_device_eng(self, model: str, magic: str) -> HttpResponseObject:
+    async def get_device_eng(self, model: str, magic: str):
         await asyncio.sleep(self.fetch_interval)
-        return await self._make_request(
-            "GET",
-            url=f"/{model}/{magic}/eng.html",
-            get_text=True,
-        )
+        async with aiohttp.ClientSession() as session:
+            r = await session.get(url=f"https://doc.samsungmobile.com/{model}/{magic}/eng.html")
+            return await r.content.read()

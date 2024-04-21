@@ -113,7 +113,7 @@ class SamsungKernelInfo:
                     f"{OSS_BASE_URL}/downSrcMPop?uploadId={self.upload_id}",
                     allow_redirects=False,
                 )
-                data = await r.text()
+                data = await r.content.read()
 
             doc = BeautifulSoup(data, "lxml")
             _csrf_elem = doc.find_all(attrs={"name": "_csrf"})
@@ -222,8 +222,8 @@ class SamsungKernelInfo:
             KernelMeta | None: The metadata for the latest kernel, or None if the fetch failed.
         """
         try:
-            r = await KernelSession.search(model)
-            soup = BeautifulSoup(r.data, "lxml")
+            kernel_search = await KernelSession.search(model)
+            soup = BeautifulSoup(kernel_search, "lxml")
             table_rows = soup.find_all("tr")
 
             for table_row in table_rows:

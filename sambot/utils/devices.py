@@ -59,8 +59,8 @@ class SamsungDeviceScraper:
         Returns:
             list[DeviceMeta]: A list of DeviceMeta objects representing the devices on the page.
         """
-        r = await GSMSession.get_devices_list(page)
-        soup = BeautifulSoup(r.data, "lxml")
+        devices_list = await GSMSession.get_devices_list(page)
+        soup = BeautifulSoup(devices_list, "lxml")
         elements = soup.select("#review-body > div.makers > ul > li")
 
         device_list = []
@@ -168,8 +168,8 @@ class SamsungDeviceScraper:
         Returns:
             DeviceMeta: The DeviceMeta object with the filled details.
         """
-        r = await GSMSession.get_device(str(device_meta.url))
-        soup = BeautifulSoup(r.data, "lxml")
+        device = await GSMSession.get_device(str(device_meta.url))
+        soup = BeautifulSoup(device, "lxml")
         tables = soup.select("#specs-list > table")
         for table in tables:
             category = table.select("table > tr > th")[0].text
@@ -190,8 +190,8 @@ class SamsungDeviceScraper:
 
         for model in device_meta.models:
             try:
-                r = await RegionsSession.get_regions(model)
-                document = BeautifulSoup(r.data, "lxml")
+                device_regions = await RegionsSession.get_regions(model)
+                document = BeautifulSoup(device_regions, "lxml")
                 region_elements = document.select(
                     "body > div.intro.bg-light > div > div > div > div > "
                     "div.card-body.text-justify.card-csc > div.item_csc > a > b"
@@ -215,8 +215,8 @@ class SamsungDeviceScraper:
             None
         """
         log.info("[DeviceScraper] - Starting device scraping")
-        r = await GSMSession.get_devices_list(1)
-        doc = BeautifulSoup(r.data, "lxml")
+        devices_list = await GSMSession.get_devices_list(1)
+        doc = BeautifulSoup(devices_list, "lxml")
         try:
             pages_count = int(
                 doc.select("#body > div > div.review-nav-v2 > div > a:nth-child(5)")[-1].text
@@ -224,9 +224,11 @@ class SamsungDeviceScraper:
         except Exception:
             log.error("[DeviceScraper] - Failed to get pages count!", exc_info=True)
             return
+
         log.info("[DeviceScraper] - Found pages of devices.", pages=pages_count)
 
         devices = []
+        log.info("[DeviceScraper] - Fetching pages, please wait...")
         for i in range(1, pages_count + 1):
             device_meta = await self.fetch_page(i)
             devices.extend(device_meta)

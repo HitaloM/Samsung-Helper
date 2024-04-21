@@ -110,15 +110,15 @@ class SamsungFirmwareInfo:
             or None if the information could not be fetched.
         """
         try:
-            r = await FWSession.get_device_doc(model, region)
-            soup = BeautifulSoup(r.data, "lxml")
+            device_doc = await FWSession.get_device_doc(model, region)
+            soup = BeautifulSoup(device_doc, "lxml")
             inp = soup.find(id="dflt_page")
 
             if inp is not None:
                 magic = inp["value"].split("/")[3]  # type: ignore
 
-                r = await FWSession.get_device_eng(model, magic)
-                soup = BeautifulSoup(r.data, "lxml")
+                device_eng = await FWSession.get_device_eng(model, magic)
+                soup = BeautifulSoup(device_eng, "lxml")
 
                 changelog_entries = soup.find_all(class_="row")
                 if len(changelog_entries) >= 2:
