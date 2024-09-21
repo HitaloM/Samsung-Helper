@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 from pathlib import Path
 from types import TracebackType
@@ -23,7 +23,7 @@ class SqliteDBConn:
 
     async def __aexit__(
         self,
-        exc_type: type | None,
+        exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
@@ -55,19 +55,18 @@ class SqliteConnection:
                         return await cursor.fetchall() if mult else await cursor.fetchone()
                     await conn.commit()
             except BaseException:
-                log.error(
-                    "[SqliteConnection] - Failed to execute query!",
-                    sql=sql,
-                    params=params,
-                    exc_info=True,
+                log.exception(
+                    "[SqliteConnection] - Failed to execute query! SQL: %s, Params: %s",
+                    sql,
+                    params,
                 )
 
     @staticmethod
     def _convert_to_model(data: dict, model: type[T]) -> T:
         return model(**data)
 
-    @staticmethod
     async def _make_request(
+        self,
         db: Path,
         sql: str,
         params: tuple = (),
@@ -75,18 +74,16 @@ class SqliteConnection:
         mult: bool = False,
         model_type: type[T] | None = None,
     ) -> T | list[T] | str | None:
-        raw = await SqliteConnection.__make_request(db, sql, params, fetch, mult)
+        raw = await self.__make_request(db, sql, params, fetch, mult)
         if raw is None:
             return [] if mult else None
         if mult:
             return (
-                [SqliteConnection._convert_to_model(i, model_type) for i in raw]
+                [self._convert_to_model(i, model_type) for i in raw]
                 if model_type is not None
                 else list(raw)
             )
-        return (
-            SqliteConnection._convert_to_model(raw, model_type) if model_type is not None else raw
-        )
+        return self._convert_to_model(raw, model_type) if model_type is not None else raw
 
 
 async def run_vacuum(db: Path) -> None:

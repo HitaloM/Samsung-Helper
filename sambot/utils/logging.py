@@ -1,25 +1,27 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 import sys
 
-import picologging
+import picologging as logging
 import structlog
+
+level = logging.DEBUG if "--debug" in sys.argv else logging.INFO
 
 structlog.configure(
     cache_logger_on_first_use=True,
-    wrapper_class=structlog.make_filtering_bound_logger(picologging.INFO),
     processors=[
         structlog.contextvars.merge_contextvars,
         structlog.processors.add_log_level,
-        structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M.%S"),
-        structlog.dev.ConsoleRenderer(exception_formatter=structlog.dev.better_traceback),
+        structlog.processors.TimeStamper(fmt="%d-%m-%Y %H:%M.%S", utc=False),
+        structlog.dev.ConsoleRenderer(),
     ],
 )
-log = structlog.wrap_logger(logger=picologging.getLogger())
 
-picologging.basicConfig(
+logging.basicConfig(
     format="%(message)s",
     stream=sys.stdout,
-    level=picologging.INFO,
+    level=level,
 )
+
+log = structlog.wrap_logger(logging.getLogger("korone"))

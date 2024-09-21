@@ -1,24 +1,17 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
 from contextlib import suppress
 from pathlib import Path
 
-import uvloop
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.utils.i18n import I18n
 
 from sambot.config import config
-from sambot.utils.aiohttp import GSMClient
-from sambot.utils.aiohttp.devices import RegionsClient
-from sambot.utils.aiohttp.firmware import FWClient
-from sambot.utils.aiohttp.kernel import KernelClient
 from sambot.utils.logging import log
 from sambot.utils.systools import ShellExceptionError, shell_run
-
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 commit_count = "None"
 commit_hash = "None"
@@ -30,19 +23,10 @@ __version__ = f"{commit_hash} ({commit_count})"
 
 log.info("Starting Samgung Helper Bot...", version=__version__)
 
-app_dir: Path = Path(__file__).parent.parent
-locales_dir: Path = app_dir / "locales"
-
-# aiohttp clients
-GSMSession = GSMClient()
-RegionsSession = RegionsClient()
-FWSession = FWClient()
-KernelSession = KernelClient()
+app_dir = Path(__file__).parent.parent
 
 bot = Bot(
     token=config.bot_token.get_secret_value(),
-    parse_mode=ParseMode.HTML,
-    disable_web_page_preview=True,
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML, link_preview_is_disabled=True),
 )
 dp = Dispatcher()
-i18n = I18n(path=locales_dir, default_locale="en", domain="bot")

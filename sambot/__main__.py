@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 import asyncio
 import datetime
@@ -7,22 +7,18 @@ from contextlib import suppress
 
 import aiocron
 import sentry_sdk
+import uvloop
 from aiogram import __version__ as aiogram_version
 from aiogram.exceptions import TelegramForbiddenError
 from aiosqlite import __version__ as aiosqlite_version
 
-from sambot import FWSession, GSMSession, KernelSession, RegionsSession, bot, config, dp, i18n
 from sambot import __version__ as sambot_version
+from sambot import bot, config, dp
 from sambot.database import create_tables, run_vacuum
-from sambot.database.chats import chats_db
-from sambot.database.devices import devices_db
+from sambot.database.devices import Devices
 from sambot.database.firmware import Firmwares
-from sambot.database.users import users_db
-from sambot.handlers import load_modules
-from sambot.middlewares.acl import ACLMiddleware
-from sambot.middlewares.i18n import MyI18nMiddleware
-from sambot.utils.command_list import set_ui_commands
-from sambot.utils.devices import DeviceScraper
+from sambot.handlers import doas
+from sambot.utils.devices import sync_devices
 from sambot.utils.logging import log
 from sambot.utils.notify import sync_firmwares
 
@@ -31,29 +27,17 @@ async def main():
     if config.sentry_url:
         log.info("Starting sentry.io integraion.")
 
-        sentry_sdk.init(
-            str(config.sentry_url),
-            traces_sample_rate=1.0,
-        )
+        sentry_sdk.init(str(config.sentry_url))
 
     await create_tables()
     dbs = [
-        chats_db.db_path,
-        devices_db.db_path,
+        Devices().db_path,
         Firmwares().db_path,
-        users_db.db_path,
     ]
     for db in dbs:
         await run_vacuum(db)
 
-    dp.message.middleware(ACLMiddleware())
-    dp.message.middleware(MyI18nMiddleware(i18n=i18n))
-    dp.callback_query.middleware(ACLMiddleware())
-    dp.callback_query.middleware(MyI18nMiddleware(i18n=i18n))
-
-    load_modules(dp)
-
-    await set_ui_commands(bot, i18n)
+    dp.include_router(doas.router)
 
     aiocron.crontab(
         "0 */6 * * *",
@@ -63,7 +47,7 @@ async def main():
     )
     aiocron.crontab(
         "0 0 1 * *",
-        func=DeviceScraper.sync_devices,
+        func=sync_devices,
         loop=asyncio.get_event_loop(),
         tz=datetime.UTC,
     )
@@ -85,16 +69,10 @@ async def main():
     useful_updates = dp.resolve_used_update_types()
     await dp.start_polling(bot, allowed_updates=useful_updates)
 
-    # close aiohttp connections
-    log.info("Closing aiohttp connections.")
-    await GSMSession.close()
-    await RegionsSession.close()
-    await FWSession.close()
-    await KernelSession.close()
-
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+            runner.run(main())
     except (KeyboardInterrupt, SystemExit):
         log.info("Samsung Helper Bot stopped!")

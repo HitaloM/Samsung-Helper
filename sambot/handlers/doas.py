@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
 import datetime
 import html
@@ -7,21 +7,20 @@ import io
 import os
 import sys
 import traceback
-from pathlib import Path
+from collections.abc import Callable
 from signal import SIGINT
 
-import orjson
-from aiofile import async_open
+import humanize
 from aiogram import F, Router
 from aiogram.filters import Command, CommandObject
-from aiogram.types import BufferedInputFile, CallbackQuery, Message
+from aiogram.types import BufferedInputFile, CallbackQuery, InaccessibleMessage, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from meval import meval
 
-from sambot import i18n
-from sambot.database import chats_db, users_db
 from sambot.filters.users import IsSudo
 from sambot.utils.callback_data import StartCallback
+from sambot.utils.devices import sync_devices
+from sambot.utils.notify import sync_firmwares
 from sambot.utils.systools import ShellExceptionError, parse_commits, shell_run
 
 router = Router(name="doas")
@@ -29,35 +28,6 @@ router = Router(name="doas")
 # Only sudo users can use these commands
 router.message.filter(IsSudo())
 router.callback_query.filter(IsSudo())
-
-
-@router.message(Command("errtest"))
-async def error_test(message: Message):
-    await message.reply("Testing error handler...")
-    test = 2 / 0
-    print(test)
-
-
-@router.message(Command("event"))
-async def json_dump(message: Message):
-    event = str(orjson.dumps(str(message)).decode())
-    await message.reply(event)
-
-
-@router.message(Command(commands=["doc", "upload"]))
-async def upload_document(message: Message, command: CommandObject):
-    path = Path(str(command.args))
-    if not Path.exists(path):
-        await message.reply("File not found.")
-        return
-
-    await message.reply("Processing...")
-
-    caption = f"<b>File:</b> <code>{path.name}</code>"
-    async with async_open(path, "rb") as file:
-        file = await file.read()
-        file = BufferedInputFile(file, filename=path.name)
-        await message.reply_document(file, caption=caption)
 
 
 @router.message(Command(commands=["reboot", "restart"]))
@@ -101,6 +71,9 @@ async def bot_update(message: Message):
 async def upgrade_callback(callback: CallbackQuery):
     message = callback.message
     if not message:
+        return
+
+    if isinstance(message, InaccessibleMessage):
         return
 
     await message.edit_reply_markup()
@@ -202,16 +175,20 @@ async def ping(message: Message):
     await sent.edit_text(f"<b>Pong!</b> <code>{delta:.2f}ms</code>")
 
 
-@router.message(Command("stats"))
-async def bot_stats(message: Message):
-    text = f"\n\n<b>Total Users</b>: <code>{await users_db.get_users_count()}</code>"
-    for language in (*i18n.available_locales, i18n.default_locale):
-        users = await users_db.get_users_count(language_code=language)
-        text += f"\n<b>{language}</b>: <code>{users}</code>"
+async def measure_and_edit(message: Message, task_name: str, task_func: Callable) -> None:
+    start_time = datetime.datetime.now(tz=datetime.UTC)
+    sent = await message.reply(f"Syncing {task_name}...")
+    await task_func()
+    delta = (datetime.datetime.now(tz=datetime.UTC) - start_time).total_seconds()
+    human_readable_delta = humanize.precisedelta(datetime.timedelta(seconds=delta))
+    await sent.edit_text(f"Synced {task_name} in <code>{human_readable_delta}</code>.")
 
-    text += f"\n\n<b>Total Groups</b>: <code>{await chats_db.get_chats_count()}</code>"
-    for language in (*i18n.available_locales, i18n.default_locale):
-        groups = await chats_db.get_chats_count(language_code=language)
-        text += f"\n<b>{language}</b>: <code>{groups}</code>"
 
-    await message.reply(text)
+@router.message(Command("syncfirmware"))
+async def sync_f(message: Message):
+    await measure_and_edit(message, "firmwares", sync_firmwares)
+
+
+@router.message(Command("syncdevices"))
+async def sync_d(message: Message):
+    await measure_and_edit(message, "devices", sync_devices)

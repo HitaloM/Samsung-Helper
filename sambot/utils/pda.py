@@ -1,56 +1,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2023 Hitalo M. <https://github.com/HitaloM>
+# Copyright (c) 2024 Hitalo M. <https://github.com/HitaloM>
 
+from operator import itemgetter
 
-def get_major_version(pda: str) -> str:
-    """
-    Returns the major version of the Android operating system represented by the given
-    PDA string.
-
-    Args:
-        pda (str): The PDA string representing the firmware version.
-
-    Returns:
-        str: The major version of the Android operating system.
-    """
-    return pda[-4]
-
-
-def get_build_year(pda: str) -> str:
-    """
-    Returns the build date of the firmware version represented by the given PDA string.
-
-    Args:
-        pda (str): The PDA string representing the firmware version.
-
-    Returns:
-        str: The build date of the firmware version.
-    """
-    return pda[-3]
-
-
-def get_build_month(pda: str) -> str:
-    """
-    Returns the build date of the firmware version represented by the given PDA string.
-
-    Args:
-        pda (str): The PDA string representing the firmware version.
-
-    Returns:
-        str: The build date of the firmware version.
-    """
-    return pda[-2]
-
-
-def get_build_id(pda: str) -> str:
-    """
-    Returns the minor version of the Android operating system represented by the given PDA
-    string.
-
-    Args:
-        pda (str): The PDA string representing the firmware version.
-
-    Returns:
-        str: The minor version of the Android operating system.
-    """
-    return pda[-1]
+get_major_version = itemgetter(-4)
+get_build_year = itemgetter(-3)
+get_build_month = itemgetter(-2)
+get_build_id = itemgetter(-1)
