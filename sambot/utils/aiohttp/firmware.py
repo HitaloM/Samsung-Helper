@@ -4,24 +4,31 @@
 import asyncio
 
 import aiohttp
-from aiohttp import ClientConnectorError
 
 from sambot.utils.logging import log
+
+from .headers import GENERIC_HEADER
 
 
 class FWClient:
     def __init__(self) -> None:
         self.max_retries: int = 5
-        self.retry_backoff: float = 1.5
+        self.retry_backoff: float = 2.0
 
     async def fetch_with_retry(self, url: str):
         retries = 0
+        await asyncio.sleep(5)
         while retries < self.max_retries:
             try:
-                async with aiohttp.ClientSession() as session, session.get(url) as response:
+                async with (
+                    aiohttp.ClientSession(
+                        timeout=aiohttp.ClientTimeout(60), headers=GENERIC_HEADER
+                    ) as session,
+                    session.get(url) as response,
+                ):
                     response.raise_for_status()
                     return await response.text()
-            except (ClientConnectorError, aiohttp.ClientError):
+            except (aiohttp.ClientConnectorError, aiohttp.ClientError):
                 retries += 1
                 await asyncio.sleep(self.retry_backoff**retries)
             except Exception as e:
@@ -32,9 +39,9 @@ class FWClient:
         return None
 
     async def get_device_doc(self, model: str, region: str):
-        url = f"https://cors-bypass.amano.workers.dev/https://doc.samsungmobile.com/{model}/{region}/doc.html"
+        url = f"https://doc.samsungmobile.com/{model}/{region}/doc.html"
         return await self.fetch_with_retry(url)
 
     async def get_device_eng(self, model: str, magic: str):
-        url = f"https://cors-bypass.amano.workers.dev/https://doc.samsungmobile.com/{model}/{magic}/eng.html"
+        url = f"https://doc.samsungmobile.com/{model}/{magic}/eng.html"
         return await self.fetch_with_retry(url)

@@ -156,7 +156,7 @@ async def sync_firmwares():
                 await process_firmware(model)
 
     async with asyncio.TaskGroup() as tg:
-        for _ in range(10):
+        for _ in range(5):
             tg.create_task(task())
 
     await channel_log(

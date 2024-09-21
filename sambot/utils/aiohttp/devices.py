@@ -5,11 +5,9 @@ import asyncio
 
 import aiohttp
 
-HEADERS: dict[str, str] = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "referer": "https://www.gsmarena.com/",
-}
+from .headers import GENERIC_HEADER
+
+HEADERS = {**GENERIC_HEADER, "referer": "https://www.gsmarena.com/"}
 
 
 class GSMClient:
@@ -19,16 +17,17 @@ class GSMClient:
         if page != 1:
             url = f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/samsung-phones-f-9-0-p{page!s}.php"
 
-        async with aiohttp.ClientSession() as session:
-            r = await session.get(url, headers=HEADERS)
+        async with aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=60), headers=HEADERS
+        ) as session:
+            r = await session.get(url)
             return await r.content.read()
 
     @staticmethod
     async def get_device(url: str):
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(headers=HEADERS) as session:
             r = await session.get(
-                f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/{url}",
-                headers=HEADERS,
+                f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/{url}"
             )
             return await r.content.read()
 
@@ -40,7 +39,7 @@ class RegionsClient:
         for attempt in range(max_retries):
             try:
                 async with aiohttp.ClientSession(
-                    timeout=aiohttp.ClientTimeout(total=60)
+                    timeout=aiohttp.ClientTimeout(total=60), headers=GENERIC_HEADER
                 ) as session:
                     r = await session.get(url=f"https://samfw.com/firmware/{model}")
                     return await r.content.read()
