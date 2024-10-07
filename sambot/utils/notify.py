@@ -11,7 +11,7 @@ from sambot import bot
 from sambot.config import config
 from sambot.database import Devices, Firmwares
 from sambot.utils.channel_logging import channel_log
-from sambot.utils.firmware import FirmwareMeta, fetch_latest_firmware
+from sambot.utils.firmware import fetch_latest_firmware
 from sambot.utils.logging import log
 
 fw_queue = asyncio.Queue()
@@ -33,6 +33,7 @@ async def process_firmware(model: str):
 
 
 async def process_regions(model: str, model_regions: list | str, firmwares_db: Firmwares):
+    pdas = []
     for region in model_regions:
         info = await fetch_latest_firmware(model, region)
 
@@ -50,74 +51,81 @@ async def process_regions(model: str, model_regions: list | str, firmwares_db: F
                 info.pda,
             )
 
+            pdas.append(info)
+
             pda = await firmwares_db.get_pda(model)
             if pda and info.is_newer_than(str(pda)):
-                await notify_new_firmware(info, model, firmwares_db)
+                keyboard = InlineKeyboardBuilder()
+                keyboard.button(text="Download ⬇️", url=info.download_url())
 
-
-async def notify_new_firmware(info: FirmwareMeta, model: str, firmwares_db: Firmwares):
-    keyboard = InlineKeyboardBuilder()
-    keyboard.button(text="Download ⬇️", url=info.download_url())
-
-    build_date = info.build_date.strftime("%Y-%m-%d")
-    securitypatch = info.securitypatch.strftime("%Y-%m-%d")
-    text = (
-        "<b>New firmware update available!</b>\n\n"
-        f"<b>Device:</b> <code>{info.name}</code>\n"
-        f"<b>Model:</b> <code>{info.model}</code>\n"
-        f"<b>Android Version:</b> <code>{info.os_version}</code>\n"
-        f"<b>Build Number:</b> <code>{info.pda}</code>\n"
-        f"<b>Release Date:</b> <code>{build_date}</code>\n"
-        f"<b>Security Patch Level:</b> <code>{securitypatch}</code>\n\n"
-        f"<b>Changelog:</b>\n{info.changelog}"
-    )
-
-    await asyncio.sleep(0.5)
-    try:
-        await bot.send_message(
-            chat_id=config.fw_channel,  # type: ignore
-            text=text,
-            reply_markup=keyboard.as_markup(),
-        )
-    except TelegramRetryAfter as e:
-        log.warn(
-            "[FirmwaresSync] - Rate limited! Waiting %s seconds to retry...",
-            e.retry_after,
-        )
-        await asyncio.sleep(e.retry_after)
-        await bot.send_message(
-            chat_id=config.fw_channel,  # type: ignore
-            text=text,
-            reply_markup=keyboard.as_markup(),
-        )
-    except TelegramBadRequest as e:
-        if "message is too long" in str(e):
-            await bot.send_message(
-                chat_id=config.fw_channel,  # type: ignore
-                text=text[:4090] + "[...]",
-                reply_markup=keyboard.as_markup(),
-            )
-        else:
-            log.exception("[FirmwaresSync] - Telegram Bad Request error: %s", e.message)
-            await channel_log(
-                text=(
-                    "<b>Alert!</b> Firmware sync encountered an error!\n"
-                    f"<b>Error:</b> <code>{e.message}</code>"
+                build_date = info.build_date.strftime("%Y-%m-%d")
+                securitypatch = info.securitypatch.strftime("%Y-%m-%d")
+                text = (
+                    "<b>New firmware update available!</b>\n\n"
+                    f"<b>Device:</b> <code>{info.name}</code>\n"
+                    f"<b>Model:</b> <code>{info.model}</code>\n"
+                    f"<b>Android Version:</b> <code>{info.os_version}</code>\n"
+                    f"<b>Build Number:</b> <code>{info.pda}</code>\n"
+                    f"<b>Release Date:</b> <code>{build_date}</code>\n"
+                    f"<b>Security Patch Level:</b> <code>{securitypatch}</code>\n\n"
+                    f"<b>Changelog:</b>\n{info.changelog}"
                 )
-            )
-    finally:
-        try:
-            await channel_log(
-                text=(f"<b>New firmware detected for {info.name}</b> (<code>{info.model}</code>)")
-            )
-        except TelegramRetryAfter as e:
-            log.warn(
-                "[FirmwaresSync] - Rate limited! Waiting %s seconds to retry...",
-                e.retry_after,
-            )
-            await asyncio.sleep(e.retry_after)
 
-    await firmwares_db.set_pda(model, info.pda)
+                await asyncio.sleep(0.5)
+                try:
+                    await bot.send_message(
+                        chat_id=config.fw_channel,  # type: ignore
+                        text=text,
+                        reply_markup=keyboard.as_markup(),
+                    )
+                except TelegramRetryAfter as e:
+                    log.warn(
+                        "[FirmwaresSync] - We are being rate limited! Waiting to retry...",
+                        wait_time=e.retry_after,
+                    )
+                    await asyncio.sleep(e.retry_after)
+                    await bot.send_message(
+                        chat_id=config.fw_channel,  # type: ignore
+                        text=text,
+                        reply_markup=keyboard.as_markup(),
+                    )
+                except TelegramBadRequest as e:
+                    if "message is too long" in str(e):
+                        await bot.send_message(
+                            chat_id=config.fw_channel,  # type: ignore
+                            text=f"{text[:4090]}[...]",
+                            reply_markup=keyboard.as_markup(),
+                        )
+                    else:
+                        log.error(
+                            "[FirmwaresSync] - Telegram Bad Request error!",
+                            exc_info=True,
+                        )
+                        await channel_log(
+                            text=(
+                                "<b>Alert!</b> Firmware sync have an error!\n"
+                                f"<b>Error:</b> <code>{e.message}</code>"
+                            )
+                        )
+                finally:
+                    try:
+                        await channel_log(
+                            text=(
+                                "<b>New firmware detected for "
+                                f"{info.name}</b> (<code>{info.model}</code>)"
+                            )
+                        )
+                    except TelegramRetryAfter as e:
+                        log.warn(
+                            "[FirmwaresSync] - We are being rate limited! Waiting to retry...",
+                            wait_time=e.retry_after,
+                        )
+                        await asyncio.sleep(e.retry_after)
+
+    if pdas:
+        pda = await firmwares_db.get_pda(model)
+        latest_pda_info = max(pdas, key=lambda info: info.is_newer_than(str(pda)))
+        await firmwares_db.set_pda(model, latest_pda_info.pda)
 
 
 async def sync_firmwares():
@@ -156,7 +164,7 @@ async def sync_firmwares():
                 await process_firmware(model)
 
     async with asyncio.TaskGroup() as tg:
-        for _ in range(5):
+        for _ in range(10):
             tg.create_task(task())
 
     await channel_log(

@@ -36,26 +36,21 @@ async def fetch_page(page: int) -> list[DeviceMeta]:
     soup = BeautifulSoup(devices_list, "lxml")
     elements = soup.select("#review-body > div.makers > ul > li")
 
-    device_list = []
-    for element in elements:
-        device = DeviceMeta(
-            name=element.select("a > strong > span")[0].text,
-            url=element.select("a")[0].attrs["href"],
-            id=int(element.select("a")[0].attrs["href"].split("-")[-1].split(".php")[0]),
-            img_url=element.select("a > img")[0].attrs["src"],
-            short_description=element.select("a > img")[0].attrs["title"],
+    return [
+        DeviceMeta(
+            name=element.select_one("a > strong > span").text,  # type: ignore
+            url=element.select_one("a").attrs["href"],  # type: ignore
+            id=int(element.select_one("a").attrs["href"].split("-")[-1].split(".php")[0]),  # type: ignore
+            img_url=element.select_one("a > img").attrs["src"],  # type: ignore
+            short_description=element.select_one("a > img").attrs["title"],  # type: ignore
         )
-        device_list.append(device)
-
-    return device_list
+        for element in elements
+    ]
 
 
 def get_normalized_models(device_meta: DeviceMeta) -> set[str]:
     models = device_meta.details.get("Misc", {}).get("Models", "")
-    split_models = models.split(",")
-
-    models_set = {model.strip().split("/")[0] for model in split_models}
-    return {model for model in models_set if model.startswith("SM-")}
+    return {model.strip().split("/")[0] for model in models.split(",") if model.startswith("SM-")}
 
 
 def get_model_supername(device_meta: DeviceMeta) -> str:
@@ -78,11 +73,9 @@ def get_model_supername(device_meta: DeviceMeta) -> str:
 
 
 def is_device_relevant(device_meta: DeviceMeta) -> bool:
-    if not device_meta.details:
-        return False
-
-    normalized_models = get_normalized_models(device_meta)
-    return bool(normalized_models) and all(model.startswith("SM-") for model in normalized_models)
+    return bool(device_meta.details) and all(
+        model.startswith("SM-") for model in get_normalized_models(device_meta)
+    )
 
 
 async def fill_details(device_meta: DeviceMeta) -> DeviceMeta:
@@ -90,23 +83,20 @@ async def fill_details(device_meta: DeviceMeta) -> DeviceMeta:
     soup = BeautifulSoup(device, "lxml")
     tables = soup.select("#specs-list > table")
     for table in tables:
-        category = table.select("table > tr > th")[0].text
+        category = table.select_one("tr > th").text  # type: ignore
         if category:
-            table_rows = table.select("table > tr")
             inner_map = device_meta.details.get(category, {})
-            for row in table_rows:
+            for row in table.select("tr"):
                 header = row.select_one("td.ttl")
                 content = row.select_one("td.nfo")
                 if header and content:
                     inner_map[header.get_text()] = content.get_text()
             device_meta.details[category] = inner_map
 
-    normalized_models = get_normalized_models(device_meta)
-    device_meta.models.extend(normalized_models)
+    device_meta.models.extend(get_normalized_models(device_meta))
     device_meta.model_supername = get_model_supername(device_meta)
 
     tasks = [fetch_regions(device_meta, model) for model in device_meta.models]
-
     await asyncio.gather(*tasks)
     return device_meta
 
@@ -114,13 +104,16 @@ async def fill_details(device_meta: DeviceMeta) -> DeviceMeta:
 async def fetch_regions(device_meta: DeviceMeta, model: str):
     try:
         device_regions = await RegionsClient.get_regions(model)
-        document = BeautifulSoup(device_regions, "lxml")  # type: ignore
+        if not device_regions:
+            log.warn("[DeviceScraper] - No regions found for model!", model=model)
+            return
+
+        document = BeautifulSoup(device_regions, "lxml")
         region_elements = document.select(
             "body > div.intro.bg-light > div > div > div > div > "
             "div.card-body.text-justify.card-csc > div.item_csc > a > b"
         )
-        region_set = {element.text for element in region_elements}
-        device_meta.regions[model] = region_set
+        device_meta.regions[model] = {element.text for element in region_elements}
     except BaseException:
         log.exception("[DeviceScraper] - Failed to get regions!", model=model)
 
@@ -131,7 +124,7 @@ async def sync_devices() -> None:
     doc = BeautifulSoup(devices_list, "lxml")
     try:
         pages_count = int(
-            doc.select("#body > div > div.review-nav-v2 > div > a:nth-child(5)")[-1].text
+            doc.select_one("#body > div > div.review-nav-v2 > div > a:nth-child(5)").text  # type: ignore
         )
     except Exception:
         log.exception("[DeviceScraper] - Failed to get pages count!")

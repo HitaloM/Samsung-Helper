@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 from yarl import URL
 
 from sambot import app_dir
+from sambot.config import Settings
 from sambot.utils.aiohttp.kernel import KernelClient
 from sambot.utils.logging import log
 from sambot.utils.pda import (
@@ -139,8 +140,9 @@ class KernelMeta:
         }
 
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5400)) as session:
+            config = Settings()  # type: ignore
             response = await session.post(
-                "https://cors-bypass.amano.workers.dev/https://opensource.samsung.com/downSrcCode",
+                f"{config.cors_bypass}/https://opensource.samsung.com/downSrcCode",
                 headers=headers,
                 data=query_bin,
             )

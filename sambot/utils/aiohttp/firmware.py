@@ -17,7 +17,7 @@ class FWClient:
 
     async def fetch_with_retry(self, url: str):
         retries = 0
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
         while retries < self.max_retries:
             try:
                 async with (

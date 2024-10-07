@@ -5,6 +5,8 @@ import asyncio
 
 import aiohttp
 
+from sambot.config import Settings
+
 from .headers import GENERIC_HEADER
 
 HEADERS = {**GENERIC_HEADER, "referer": "https://www.gsmarena.com/"}
@@ -13,9 +15,12 @@ HEADERS = {**GENERIC_HEADER, "referer": "https://www.gsmarena.com/"}
 class GSMClient:
     @staticmethod
     async def get_devices_list(page: int):
-        url = "https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/samsung-phones-9.php"
+        config = Settings()  # type: ignore
+        url = f"{config.cors_bypass}/https://www.gsmarena.com/samsung-phones-9.php"
         if page != 1:
-            url = f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/samsung-phones-f-9-0-p{page!s}.php"
+            url = (
+                f"{config.cors_bypass}/https://www.gsmarena.com/samsung-phones-f-9-0-p{page!s}.php"
+            )
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=60), headers=HEADERS
@@ -25,10 +30,9 @@ class GSMClient:
 
     @staticmethod
     async def get_device(url: str):
+        config = Settings()  # type: ignore
         async with aiohttp.ClientSession(headers=HEADERS) as session:
-            r = await session.get(
-                f"https://cors-bypass.amano.workers.dev/https://www.gsmarena.com/{url}"
-            )
+            r = await session.get(f"{config.cors_bypass}/https://www.gsmarena.com/{url}")
             return await r.content.read()
 
 

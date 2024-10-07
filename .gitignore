@@ -12,7 +12,7 @@ venv/
 
 # sambot
 data/config.env
-sambot/database/*.db
+sambot/database/*.db*
 locales/*/*/*.mo
 data/downloads/*.zip
 

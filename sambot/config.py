@@ -10,6 +10,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     bot_token: SecretStr
     redis_host: str = "localhost"
+    cors_bypass: str
     sentry_url: AnyHttpUrl | None = None
     sudoers: ClassVar[list[int]] = [918317361]
     logs_channel: int | None = None
